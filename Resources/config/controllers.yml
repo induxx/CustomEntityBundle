@@ -18,3 +18,15 @@ services:
         class: '%pim_custom_entity.rest_controller.class%'
         arguments:
             - '@pim_custom_entity.configuration.registry'
+
+    ### API
+    pim_custom_entity.api_controller.reference_entity:
+        public: true
+        class: Pim\Bundle\CustomEntityBundle\Controller\Rest\ReferenceDataController
+        arguments:
+            - '@pim_serializer'
+            - '@pim_api.pagination.offset_hal_paginator'
+            - '@pim_api.pagination.parameter_validator'
+            - '@fos_oauth_server.entity_manager'
+            - '%pim_api.configuration%'
+            - '%referenced_data_entity_mappings%'
