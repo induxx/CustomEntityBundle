@@ -93,7 +93,21 @@ Then:
     $ vendor/bin/phpunit
 ```
 
-## Contributing
+#### API
 
-If you want to contribute to this open-source project,
-thank you to read and sign the following [contributor agreement](http://www.akeneo.com/contributor-license-agreement/)
+Add API endpoints that mimick the reference-entities api endpoints.
+Not all endpoints are converted!!
+
+```yaml
+# config/routes/reference_data.yml
+api_reference_entity:
+  resource: '@PimCustomEntityBundle/Resources/config/routing/reference_data_api.yml'
+  prefix: /api/rest/v1
+```
+
+```yaml
+# config/services/services.yml
+parameters:
+    referenced_data_entity_mappings:
+        brand: <Induxx>\Bundle\ReferenceDataBundle\Entity\Brans
+```
