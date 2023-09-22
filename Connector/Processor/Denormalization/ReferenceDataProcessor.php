@@ -15,7 +15,7 @@ use Pim\Bundle\CustomEntityBundle\Configuration\Registry;
 use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
+use Akeneo\Channel\Infrastructure\Component\Repository\LocaleRepositoryInterface;
 
 /**
  * Generic denormalizer processor for reference data
