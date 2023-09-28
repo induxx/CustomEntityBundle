@@ -29,7 +29,7 @@ extensions:
         targetZone: container
         position: 100
         config:
-            tabTitle: pim_enrich.form.job_instance.tab.properties.title
+            tabTitle: pim_common.properties
             tabCode: pim-job-instance-properties
 
     reference-data-job-instance-csv-export-show-history:
@@ -40,7 +40,7 @@ extensions:
         position: 120
         config:
             class: Akeneo\Tool\Component\Batch\Model\JobInstance
-            title: pim_enrich.form.job_instance.tab.history.title
+            title: pim_common.history
             tabCode: pim-job-instance-history
 
     reference-data-job-instance-csv-export-show-properties-code:
@@ -50,7 +50,7 @@ extensions:
         targetZone: properties
         config:
             fieldCode: code
-            label: pim_enrich.form.job_instance.tab.properties.code.title
+            label: pim_common.code
             readOnly: true
 
     reference-data-job-instance-csv-export-show-properties-label:
@@ -60,7 +60,7 @@ extensions:
         targetZone: properties
         config:
             fieldCode: label
-            label: pim_enrich.form.job_instance.tab.properties.label.title
+            label: pim_common.label
             readOnly: true
 
     reference-data-job-instance-csv-export-show-properties-file-path:
@@ -71,8 +71,8 @@ extensions:
         config:
             fieldCode: configuration.filePath
             readOnly: true
-            label: pim_enrich.form.job_instance.tab.properties.file_path.title
-            tooltip: pim_enrich.form.job_instance.tab.properties.file_path.help
+            label: pim_import_export.form.job_instance.tab.properties.file_path.title
+            tooltip: pim_import_export.form.job_instance.tab.properties.file_path.help
 
     reference-data-job-instance-csv-export-show-properties-delimiter:
         module: pim/job/common/edit/field/text
@@ -82,8 +82,8 @@ extensions:
         config:
             fieldCode: configuration.delimiter
             readOnly: true
-            label: pim_enrich.form.job_instance.tab.properties.delimiter.title
-            tooltip: pim_enrich.form.job_instance.tab.properties.delimiter.help
+            label: pim_import_export.form.job_instance.tab.properties.delimiter.title
+            tooltip: pim_import_export.form.job_instance.tab.properties.delimiter.help
 
     reference-data-job-instance-csv-export-show-properties-enclosure:
         module: pim/job/common/edit/field/text
@@ -93,8 +93,8 @@ extensions:
         config:
             fieldCode: configuration.enclosure
             readOnly: true
-            label: pim_enrich.form.job_instance.tab.properties.enclosure.title
-            tooltip: pim_enrich.form.job_instance.tab.properties.enclosure.help
+            label: pim_import_export.form.job_instance.tab.properties.enclosure.title
+            tooltip: pim_import_export.form.job_instance.tab.properties.enclosure.help
 
     reference-data-job-instance-csv-export-show-properties-with-header:
         module: pim/job/common/edit/field/switch
@@ -104,8 +104,8 @@ extensions:
         config:
             fieldCode: configuration.withHeader
             readOnly: true
-            label: pim_enrich.form.job_instance.tab.properties.with_header.title
-            tooltip: pim_enrich.form.job_instance.tab.properties.with_header.help
+            label: pim_import_export.form.job_instance.tab.properties.with_header.title
+            tooltip: pim_import_export.form.job_instance.tab.properties.with_header.help
 
     reference-data-job-instance-csv-export-show-properties-reference-data-names:
         module: custom_entity/field/select2
@@ -136,7 +136,7 @@ extensions:
         targetZone: buttons
         position: 100
         config:
-            label: pim_enrich.form.job_instance.button.edit.title
+            label: pim_common.edit
             route: pim_importexport_export_profile_edit
             buttonClass: AknButton AknButton--action
             identifier:
@@ -149,7 +149,7 @@ extensions:
         targetZone: buttons
         position: 110
         config:
-            label: pim_enrich.form.job_instance.button.export.title
+            label: pim_import_export.form.job_instance.button.export.title
             route: pim_enrich_job_instance_rest_export_launch
             identifier:
                 path: code
