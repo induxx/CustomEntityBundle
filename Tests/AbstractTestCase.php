@@ -3,7 +3,7 @@
 namespace Pim\Bundle\CustomEntityBundle\Tests;
 
 use Akeneo\Channel\Component\Model\ChannelInterface;
-use Akeneo\Channel\Component\Repository\ChannelRepositoryInterface;
+use Akeneo\Channel\Infrastructure\Component\Repository\ChannelRepositoryInterface;
 use Akeneo\Test\Integration\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Pim\Bundle\CustomEntityBundle\Manager\ManagerInterface;
