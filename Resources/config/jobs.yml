@@ -45,6 +45,7 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -
+                - '@akeneo.job_automation.connector.step.download'
                 - '@pim_connector.step.charset_validator'
                 - '@pim_custom_entity.step.csv_reference_data_import'
         tags:

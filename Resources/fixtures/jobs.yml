@@ -8,4 +8,5 @@ jobs:
             delimiter:  ;
             enclosure:  '"'
             withHeader: true
-            filePath:   /tmp/reference_data_quick_export.csv
+            storage:
+                file_path:   /tmp/reference_data_quick_export.csv
