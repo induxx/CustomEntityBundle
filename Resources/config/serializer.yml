@@ -41,7 +41,7 @@ services:
             - ['setSkippedFields', [ ['id', 'locale', 'foreignKey'] ] ]
 
     pim_reference_data.datagrid.normalizer.reference_data:
-        class: 'Pim\Bundle\CustomEntityBundle\Normalizer\PimDataGridBundle\Product'
+        class: 'Pim\Bundle\CustomEntityBundle\Normalizer\PimDataGridBundle\Product\ReferenceDataNormalizer'
         arguments:
             - '@pim_catalog.repository.cached_attribute'
             - '@pim_reference_data.repository_resolver'
