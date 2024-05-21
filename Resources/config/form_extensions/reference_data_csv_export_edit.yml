@@ -78,17 +78,6 @@ extensions:
             jobType: export
             fileExtension: csv
 
-    reference-data-job-instance-csv-export-edit-properties-file-path:
-        module: pim/job/common/edit/field/text
-        parent: reference-data-job-instance-csv-export-edit-properties
-        position: 120
-        targetZone: properties
-        config:
-            fieldCode: configuration.filePath
-            readOnly: false
-            label: pim_import_export.form.job_instance.tab.properties.file_path.title
-            tooltip: pim_import_export.form.job_instance.tab.properties.file_path.help
-
     reference-data-job-instance-csv-export-edit-properties-delimiter:
         module: pim/job/common/edit/field/text
         parent: reference-data-job-instance-csv-export-edit-properties
