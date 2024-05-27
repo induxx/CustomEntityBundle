@@ -1,0 +1,30 @@
+# mimicks the API interfaces and responses of reference-entities
+api_reference_entity_list:
+  path: /reference-entities/{referenceCode}/records
+  defaults: { _controller: pim_custom_entity.api_controller.reference_entity:listAction, _format: json }
+  methods: [GET]
+
+api_reference_entity_get:
+  path: /reference-entities/{referenceCode}/records/{code}
+  defaults: { _controller: pim_custom_entity.api_controller.reference_entity:getAction, _format: json }
+  methods: [GET]
+
+api_media_file_list:
+  path: /reference-entities-media-files/{code}
+  defaults: { _controller: pim_api.controller.media_file:getAction, _format: json }
+  methods: [GET]
+  requirements:
+    code: ([a-zA-Z0-9_.-]+)
+
+# some old references found in Serax
+#induxx_api_reference_entity_get:
+#  path: /restByCode/{referenceCode}/{code}
+#  defaults: { _controller:  pim_custom_entity.api_controller.reference_entity:getAction, _format: json }
+#  methods: [ GET ]
+#
+#induxx_api_media_file_list:
+#  path: /media-files/{code}
+#  defaults: { _controller:  pim_custom_entity.api_controller.reference_entity:getAction, _format: json }
+#  methods: [ GET ]
+#  requirements:
+#    code: ([a-zA-Z0-9_./]+)
