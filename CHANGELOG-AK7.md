@@ -70,7 +70,7 @@ datagrid:
         link: delete_link
 ```
 
-```shell
+```yaml
 ## add label and image
 # */ReferenceDataBundle/Resources/config/form_extensions/color/edit.yml
 ...
