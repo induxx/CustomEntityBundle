@@ -3,6 +3,13 @@ pim_menu:
     item.reference_data: Reference data
     navigation.reference_data: Reference data
 
+grid:
+    action:
+        label:
+            edit: Edit this Reference
+            show: Show this Reference
+            delete: Delete this Reference
+
 pim_custom_entity:
     index_title: Overview
     create_popin.title: Create
@@ -15,6 +22,8 @@ pim_custom_entity:
                 section:
                     common: Common
                     label_translations: Labels
+            image.title: Image
+            label.title: Label
     button:
         create: Create
     message:
