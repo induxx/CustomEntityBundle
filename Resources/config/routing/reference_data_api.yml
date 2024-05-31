@@ -14,7 +14,7 @@ api_media_file_list:
   defaults: { _controller: pim_api.controller.media_file:getAction, _format: json }
   methods: [GET]
   requirements:
-    code: ([a-zA-Z0-9_.-]+)
+    code: ([a-zA-Z0-9_.-/]+)
 
 # some old references found in Serax
 #induxx_api_reference_entity_get:
