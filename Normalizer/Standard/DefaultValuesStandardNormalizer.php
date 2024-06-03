@@ -23,7 +23,7 @@ class DefaultValuesStandardNormalizer implements NormalizerInterface
         $normalizedEntity = [
             'id'   => $entity->getId(),
             'code' => $entity->getCode(),
-            'image' => $this->getFileData($object->getImage()),
+            'image' => $this->getFileData($entity->getImage()),
             'label' => $entity->getLabel(),
         ];
 
