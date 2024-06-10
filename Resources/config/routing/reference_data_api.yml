@@ -9,12 +9,18 @@ api_reference_entity_get:
   defaults: { _controller: pim_custom_entity.api_controller.reference_entity:getAction, _format: json }
   methods: [GET]
 
+api_reference_entity_patch:
+  path: /reference-entities/{referenceCode}/records/{code}
+  defaults: { _controller: Andres\Bundle\ReferenceDataBundle\Controller\Rest\PartialUpdateAction, _format: json }
+  methods: [PATCH]
+
 api_media_file_list:
   path: /reference-entities-media-files/{code}
   defaults: { _controller: pim_api.controller.media_file:getAction, _format: json }
   methods: [GET]
   requirements:
     code: ([a-zA-Z0-9_.-/]+)
+
 
 # some old references found in Serax
 #induxx_api_reference_entity_get:

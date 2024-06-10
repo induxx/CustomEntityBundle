@@ -2,6 +2,9 @@ parameters:
     pim_ui.controller.ajax_option.class:     Pim\Bundle\CustomEntityBundle\Controller\AjaxOptionController
     pimee_product_asset.controller.ajax_option.class:   Pim\Bundle\CustomEntityBundle\Controller\EnterpriseAjaxOptionController
     pim_custom_entity.rest_controller.class: Pim\Bundle\CustomEntityBundle\Controller\RestController
+    
+    referenced_data_entity_mappings: [ ]
+    referenced_data_entity_names: [ ]
 
 services:
     pim_custom_entity.controller:
@@ -30,3 +33,18 @@ services:
             - '@fos_oauth_server.entity_manager'
             - '%pim_api.configuration%'
             - '%referenced_data_entity_mappings%'
+
+    Pim\Bundle\ReferenceDataBundle\Controller\Rest\PartialUpdateAction:
+        shared: false
+        public: true
+        arguments:
+            - '@pim_custom_entity.action.factory'
+            - '@pim_custom_entity.action_event_manager'
+            - '@pim_custom_entity.manager.registry'
+            - '@pim_custom_entity.configuration.registry'
+            - '@router'
+            - '@fos_oauth_server.entity_manager'
+            - '@validator'
+            - '@pim_enrich.normalizer.violation'
+            - '%referenced_data_entity_mappings%'
+            - '%referenced_data_entity_names%'

@@ -7,8 +7,6 @@ parameters:
 
     pim_custom_entity.array_converter.flat_to_standard.reference_data.class: Pim\Bundle\CustomEntityBundle\Connector\ArrayConverter\FlatToStandard\ReferenceData
 
-    referenced_data_entity_mappings: []
-
 services:
     # Readers
     pim_custom_entity.reader.file.csv:
