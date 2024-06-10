@@ -34,7 +34,7 @@ services:
             - '%pim_api.configuration%'
             - '%referenced_data_entity_mappings%'
 
-    Pim\Bundle\ReferenceDataBundle\Controller\Rest\PartialUpdateAction:
+    Pim\Bundle\CustomEntityBundle\Controller\Rest\PartialUpdateAction:
         shared: false
         public: true
         arguments:
