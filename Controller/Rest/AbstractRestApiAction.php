@@ -2,10 +2,6 @@
 
 namespace Pim\Bundle\CustomEntityBundle\Controller\Rest;
 
-use Andres\Bundle\ReferenceDataBundle\Entity\ColourSpecific;
-use Andres\Bundle\ReferenceDataBundle\Entity\FabricProperties;
-use Andres\Bundle\ReferenceDataBundle\Entity\Mannequin;
-use Andres\Bundle\ReferenceDataBundle\Entity\WashingInstructions;
 use Pim\Bundle\CustomEntityBundle\Action\ActionFactory;
 use Pim\Bundle\CustomEntityBundle\Configuration\ConfigurationInterface;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomEntity;
