@@ -53,3 +53,11 @@ services:
             - '@pim_reference_data.repository_resolver'
         tags:
             - { name: pim_datagrid_serializer.normalizer }
+
+    pim_reference_data.datagrid.normalizer.reference_data_collection:
+        class: 'Pim\Bundle\CustomEntityBundle\Normalizer\PimDataGridBundle\Product\ReferenceDataCollectionNormalizer'
+        arguments:
+            - '@pim_catalog.repository.cached_attribute'
+            - '@pim_reference_data.repository_resolver'
+        tags:
+            - { name: pim_datagrid_serializer.normalizer }
