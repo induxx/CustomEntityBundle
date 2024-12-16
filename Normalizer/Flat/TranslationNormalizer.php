@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\CustomEntityBundle\Normalizer\Flat;
 
+use Akeneo\Tool\Component\FileStorage\Model\FileInfoInterface;
 use Pim\Bundle\CustomEntityBundle\Metadata\ClassMetadataRegistry;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -48,6 +49,12 @@ class TranslationNormalizer implements NormalizerInterface
             $transValue = $this->propertyAccessor->getValue($translation, $transProperty);
             if (!is_object($transValue) && !is_array($transValue)) {
                 $normalizedData[sprintf('%s-%s', $transProperty, $translation->getLocale())] = $transValue;
+
+                continue;
+            }
+
+            if ($transValue instanceof FileInfoInterface) {
+                $normalizedData[sprintf('%s-%s', $transProperty, $translation->getLocale())] = $transValue->getKey();
             }
         }
 
