@@ -18,11 +18,9 @@ extensions:
             logout: pim_menu.user.logout
 
     reference-data-job-instance-csv-import-show-breadcrumbs:
-        module: pim/common/breadcrumbs
+        module: pim/job/common/breadcrumb/breadcrumb
         parent: reference-data-job-instance-csv-import-show
         targetZone: breadcrumbs
-#        config:
-#            tab: pim-menu-imports
 
     reference-data-job-instance-csv-import-show-switcher:
         module: pim/job-instance/import/switcher
@@ -80,7 +78,7 @@ extensions:
         parent: reference-data-job-instance-csv-import-show-upload-switcher-item
         position: 60
         config:
-            label: pim_enrich.form.job_instance.button.import.upload
+            label: pim_import_export.form.job_instance.button.import.upload
             route: pim_enrich_job_instance_rest_import_launch
             identifier:
                 path: code
@@ -91,10 +89,8 @@ extensions:
         parent: reference-data-job-instance-csv-import-show
         position: 100
         targetZone: content
-#        config:
-#            title: pim_enrich.form.job_instance.subsection.last_executions
 
-    pim-job-instance-csv-base-import-show-label:
+    reference-data-job-instance-csv-import-show-label:
         module: pim/job/common/edit/label
         parent: reference-data-job-instance-csv-import-show
         targetZone: title
@@ -105,6 +101,7 @@ extensions:
         parent: reference-data-job-instance-csv-import-show
         targetZone: buttons
         position: 100
+        aclResourceId: pim_importexport_import_profile_edit
         config:
             label: pim_common.edit
             route: pim_importexport_import_profile_edit
