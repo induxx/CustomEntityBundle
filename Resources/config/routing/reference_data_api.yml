@@ -9,6 +9,11 @@ api_reference_entity_get:
   defaults: { _controller: pim_custom_entity.api_controller.reference_entity:getAction, _format: json }
   methods: [GET]
 
+api_reference_entity_patch:
+  path: /reference-entities/{referenceCode}/records/{code}
+  defaults: { _controller: Pim\Bundle\CustomEntityBundle\Controller\Rest\PartialUpdateAction, _format: json }
+  methods: [PATCH]
+
 api_media_file_list:
   path: /reference-entities-media-files/{code}
   defaults: { _controller: pim_api.controller.media_file:getAction, _format: json }

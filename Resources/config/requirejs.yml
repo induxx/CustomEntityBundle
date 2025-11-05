@@ -14,6 +14,9 @@ config:
         custom_entity/remover/reference-data: pimcustomentity/js/remover/reference-data-remover
         oro/datagrid/delete-action: pimcustomentity/js/datagrid/action/delete-action
 
+        referencedata/media-field:                       pimcustomentity/js/field/media-field
+        referencedata/template/field/media-field:        pimcustomentity/templates/field/media-field.html
+
     config:
         pim/fetcher-registry:
             fetchers:
