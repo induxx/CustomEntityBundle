@@ -21,7 +21,6 @@ api_media_file_list:
   requirements:
     code: ([a-zA-Z0-9_.-/]+)
 
-
 # some old references found in Serax
 #induxx_api_reference_entity_get:
 #  path: /restByCode/{referenceCode}/{code}
