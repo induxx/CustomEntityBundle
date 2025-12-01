@@ -42,7 +42,7 @@ class Registry
      */
     public function has($name): bool
     {
-        return isset($this->configurations[$name]);
+        return isset($this->configurations[$this->normalizeName($name)]);
     }
 
     /**
@@ -54,7 +54,7 @@ class Registry
      */
     public function get($name): ConfigurationInterface
     {
-        return $this->container->get($this->configurations[$name]);
+        return $this->container->get($this->configurations[$this->normalizeName($name)]);
     }
 
     /**
@@ -65,7 +65,7 @@ class Registry
      */
     public function add($name, $serviceId): void
     {
-        $this->configurations[$name] = $serviceId;
+        $this->configurations[$this->normalizeName($name)] = $serviceId;
     }
 
     /**
@@ -76,5 +76,14 @@ class Registry
     public function getNames(): array
     {
         return array_keys($this->configurations);
+    }
+
+    /**
+     * Custom entity names are stored with underscores in persistence (from the ORM) but referenced with hyphens in the UI.
+     * Normalizing keeps both forms compatible without leaking the workaround elsewhere.
+     */
+    private function normalizeName(string $name): string
+    {
+        return str_replace('-', '_', $name);
     }
 }
