@@ -31,4 +31,9 @@ trait DefaultValuesTrait
     {
         $this->image = $image;
     }
+
+    public static function getLabelProperty(): string
+    {
+        return 'label';
+    }
 }
