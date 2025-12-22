@@ -3,6 +3,8 @@
 namespace Pim\Bundle\CustomEntityBundle\Normalizer\Flat;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ReferenceDataInterface;
+use Akeneo\Channel\Infrastructure\Component\Repository\LocaleRepositoryInterface;
+use Akeneo\Tool\Component\Localization\Model\TranslatableInterface;
 use Akeneo\Tool\Component\Localization\Model\TranslationInterface;
 use Doctrine\Common\Collections\Collection;
 use Pim\Bundle\CustomEntityBundle\Metadata\ClassMetadataRegistry;
@@ -30,25 +32,34 @@ class ReferenceDataNormalizer implements NormalizerInterface
     /** @var NormalizerInterface */
     protected $transNormalizer;
 
+    /** @var LocaleRepositoryInterface|null */
+    private $localeRepository;
+
     /** @var string[] */
     protected $skippedFields = [];
+
+    /** @var string[] */
+    private $translationSkippedFields = ['id', 'locale', 'foreignKey'];
 
     /**
      * @param TargetEntityResolver $targetEntityResolver
      * @param ClassMetadataRegistry $classMetadataRegistry
      * @param PropertyAccessorInterface $propertyAccessor
      * @param NormalizerInterface $transNormalizer
+     * @param LocaleRepositoryInterface|null $localeRepository
      */
     public function __construct(
         TargetEntityResolver $targetEntityResolver,
         ClassMetadataRegistry $classMetadataRegistry,
         PropertyAccessorInterface $propertyAccessor,
-        NormalizerInterface $transNormalizer
+        NormalizerInterface $transNormalizer,
+        LocaleRepositoryInterface $localeRepository = null
     ) {
         $this->targetEntityResolver = $targetEntityResolver;
         $this->classMetadataRegistry = $classMetadataRegistry;
         $this->propertyAccessor = $propertyAccessor;
         $this->transNormalizer = $transNormalizer;
+        $this->localeRepository = $localeRepository;
     }
 
     /**
@@ -64,6 +75,11 @@ class ReferenceDataNormalizer implements NormalizerInterface
         foreach ($properties as $property) {
             $propertyValue = $this->propertyAccessor->getValue($object, $property);
 
+            if ($propertyValue instanceof \DateTimeInterface) {
+                $csvData[$property] = $propertyValue->format('Y-m-d');
+                continue;
+            }
+
             if (is_object($propertyValue)) {
                 $normalizedData = $this->normalizeLinkedObject($object, $property, $propertyValue, $format, $context);
                 if (is_array($normalizedData)) {
@@ -74,6 +90,11 @@ class ReferenceDataNormalizer implements NormalizerInterface
                     $csvData[$property] = $propertyValue;
                 }
             }
+        }
+
+        if ($object instanceof TranslatableInterface) {
+            $csvData = $this->mergeTranslations($object, $csvData, $format);
+            $csvData = $this->ensureTranslationColumns($object, $csvData);
         }
 
         return $csvData;
@@ -119,6 +140,48 @@ class ReferenceDataNormalizer implements NormalizerInterface
         }
 
         return null;
+    }
+
+    private function mergeTranslations(TranslatableInterface $object, array $csvData, $format): array
+    {
+        foreach ($object->getTranslations() as $translation) {
+            if (!$translation instanceof TranslationInterface) {
+                continue;
+            }
+
+            $translationData = $this->transNormalizer->normalize($translation, $format);
+            $csvData = array_merge($csvData, $translationData);
+        }
+
+        return $csvData;
+    }
+
+    private function ensureTranslationColumns(TranslatableInterface $object, array $csvData): array
+    {
+        if (null === $this->localeRepository) {
+            return $csvData;
+        }
+
+        $localeCodes = $this->localeRepository->getActivatedLocaleCodes();
+        if (empty($localeCodes)) {
+            return $csvData;
+        }
+
+        $translationClass = $object->getTranslationFQCN();
+        $translationPrototype = new $translationClass();
+        $properties = $this->classMetadataRegistry->getReadableProperties($translationPrototype);
+        $properties = array_diff($properties, $this->translationSkippedFields);
+
+        foreach ($properties as $property) {
+            foreach ($localeCodes as $localeCode) {
+                $column = sprintf('%s-%s', $property, $localeCode);
+                if (!array_key_exists($column, $csvData)) {
+                    $csvData[$column] = '';
+                }
+            }
+        }
+
+        return $csvData;
     }
 
     /**

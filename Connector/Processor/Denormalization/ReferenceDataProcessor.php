@@ -215,7 +215,7 @@ class ReferenceDataProcessor implements ItemProcessorInterface, StepExecutionAwa
             foreach($item as $key => $value) {
                 $translatableField = explode('-', $key);
                 if(in_array($locale, $translatableField)) {
-                    $item[$translatableField[0] . 's'][$locale] = $value;
+                    $item[$translatableField[0]][$locale] = $value;
                     unset($item[$key]);
                 }
 
