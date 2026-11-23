@@ -13,12 +13,35 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=8.0.0",
-        "akeneo/pim-community-dev": "^7.0.0"
+        "php": ">=8.3.0",
+        "akeneo/pim-community-dev": "^2026.5"
     },
     "require-dev": {
-        "phpspec/phpspec": "^6.0",
-        "friendsofphp/php-cs-fixer": "^3.2"
+        "phpspec/phpspec": "^8.2.0",
+        "phpspec/prophecy": "^1.24.0",
+        "friendsofphp/php-cs-fixer": "^3.13.0",
+        "phpunit/phpunit": "^10.5"
+    },
+    "scripts": {
+        "test": ["@test:spec", "@test:unit"],
+        "test:spec": "vendor/bin/phpspec run",
+        "test:unit": "vendor/bin/phpunit -c Tests/Resources/phpunit-unit.xml",
+        "test:integration": "vendor/bin/phpunit -c Tests/Resources/phpunit.xml --testsuite integration"
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true
+        },
+        "audit": {
+            "block-insecure": false
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Pim\\Bundle\\CustomEntityBundle\\Tests\\": "Tests/Integration/",
+            "Akeneo\\Test\\IntegrationTestsBundle\\": "vendor/akeneo/pim-community-dev/tests/back/Integration/IntegrationTestsBundle/",
+            "Akeneo\\Test\\": "vendor/akeneo/pim-community-dev/tests/back/"
+        }
     },
     "autoload": {
         "psr-4": {

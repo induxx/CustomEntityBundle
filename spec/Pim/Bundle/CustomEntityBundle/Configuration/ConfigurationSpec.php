@@ -3,6 +3,7 @@
 namespace spec\Pim\Bundle\CustomEntityBundle\Configuration;
 
 use PhpSpec\ObjectBehavior;
+use Prophecy\Argument;
 use Pim\Bundle\CustomEntityBundle\Configuration\Configuration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -10,6 +11,7 @@ class ConfigurationSpec extends ObjectBehavior
 {
     public function let(EventDispatcherInterface $eventDispatcher)
     {
+        $eventDispatcher->dispatch(Argument::type('object'), Argument::any())->will(function ($args) { return $args[0]; });
         $this->beConstructedWith($eventDispatcher, 'entity', 'entity_class');
     }
 

@@ -2,6 +2,7 @@
 
 namespace spec\Pim\Bundle\CustomEntityBundle\Connector\Processor\Denormalization;
 
+use Akeneo\Channel\Infrastructure\Component\Repository\LocaleRepositoryInterface;
 use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
 use Akeneo\Tool\Component\Batch\Item\ItemProcessorInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
@@ -32,7 +33,8 @@ class ReferenceDataProcessorSpec extends ObjectBehavior
         StepExecution $stepExecution,
         JobParameters $jobParameters,
         IdentifiableObjectRepositoryInterface $objectRepository,
-        ConfigurationInterface $config
+        ConfigurationInterface $config,
+        LocaleRepositoryInterface $localeRepository
     ) {
         $jobParameters->get('reference_data_name')->willReturn('my_custom_entity_name');
         $stepExecution->getJobParameters()->willReturn($jobParameters);
@@ -41,7 +43,8 @@ class ReferenceDataProcessorSpec extends ObjectBehavior
         $registry->get('my_custom_entity_name')->willReturn($config);
         $em->getRepository('\stdClass')->willReturn($objectRepository);
 
-        $this->beConstructedWith($registry, $em, $updater, $validator, $detacher);
+        $localeRepository->getActivatedLocaleCodes()->willReturn([]);
+        $this->beConstructedWith($registry, $em, $updater, $validator, $detacher, $localeRepository);
         $this->setStepExecution($stepExecution);
     }
 
