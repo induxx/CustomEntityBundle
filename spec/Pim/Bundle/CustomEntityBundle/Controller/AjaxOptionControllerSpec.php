@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Pim\Bundle\CustomEntityBundle\Controller;
 
 use PhpSpec\ObjectBehavior;
@@ -9,14 +11,14 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class AjaxOptionControllerSpec extends ObjectBehavior
 {
-    function let(ManagerRegistry $doctrine, ConfigurationRegistryInterface $registry)
+    public function let(ManagerRegistry $doctrine, ConfigurationRegistryInterface $registry): void
     {
         $this->beConstructedWith($doctrine, $registry);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(AjaxOptionController::class);
-        $this->shouldBeAnInstanceOf('Akeneo\Platform\Bundle\UIBundle\Controller\AjaxOptionController');
+        $this->shouldBeAnInstanceOf(\Akeneo\Platform\Bundle\UIBundle\Controller\AjaxOptionController::class);
     }
 }

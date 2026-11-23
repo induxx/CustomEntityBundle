@@ -9,25 +9,25 @@ use Pim\Bundle\CustomEntityBundle\Connector\Job\JobParameters\DefaultValuesProvi
 
 class ReferenceDataSpec extends ObjectBehavior
 {
-    function let(DefaultValuesProviderInterface $simpleProvider)
+    public function let(DefaultValuesProviderInterface $simpleProvider): void
     {
         $this->beConstructedWith($simpleProvider, ['a_job_name']);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ReferenceData::class);
     }
 
-    function it_is_a_default_values_provider()
+    public function it_is_a_default_values_provider(): void
     {
         $this->shouldImplement(DefaultValuesProviderInterface::class);
     }
 
-    function it_only_provides_values_for_supported_jobs(
+    public function it_only_provides_values_for_supported_jobs(
         JobInterface $supportedJob,
-        JobInterface $unsupportedJob
-    ) {
+        JobInterface $unsupportedJob,
+    ): void {
         $supportedJob->getName()->willReturn('a_job_name');
         $unsupportedJob->getName()->willReturn('another_job_name');
 
@@ -35,7 +35,7 @@ class ReferenceDataSpec extends ObjectBehavior
         $this->supports($unsupportedJob)->shouldReturn(false);
     }
 
-    function it_provides_default_values($simpleProvider)
+    public function it_provides_default_values($simpleProvider): void
     {
         $simpleProvider->getDefaultValues()->willReturn([]);
         $this->getDefaultValues()->shouldHaveKeyWithValue('reference_data_name', null);

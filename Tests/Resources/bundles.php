@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+use Akeneo\Test\IntegrationTestsBundle\AkeneoIntegrationTestsBundle;
+use Pim\Bundle\CustomEntityBundle\PimCustomEntityBundle;
+use Acme\Bundle\CustomBundle\AcmeCustomBundle;
+
 return [
-    Akeneo\Test\IntegrationTestsBundle\AkeneoIntegrationTestsBundle::class => ['test' => true],
-    Pim\Bundle\CustomEntityBundle\PimCustomEntityBundle::class => ['test' => true],
-    Acme\Bundle\CustomBundle\AcmeCustomBundle::class => ['test' => true]
+    AkeneoIntegrationTestsBundle::class => ['test' => true],
+    PimCustomEntityBundle::class => ['test' => true],
+    AcmeCustomBundle::class => ['test' => true],
 ];

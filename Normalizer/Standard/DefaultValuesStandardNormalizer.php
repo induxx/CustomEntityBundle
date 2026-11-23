@@ -8,31 +8,22 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DefaultValuesStandardNormalizer implements NormalizerInterface
 {
-    /** @var array $supportedFormats */
+    /** @var array */
     protected $supportedFormats = ['standard'];
 
     /**
      * @param AbstractCustomEntity $entity
-     * @param null                 $format
-     * @param array                $context
-     *
-     * @return array
      */
     public function normalize($entity, $format = null, array $context = []): array
     {
-        $normalizedEntity = [
+        return [
             'id'   => $entity->getId(),
             'code' => $entity->getCode(),
             'image' => $this->getFileData($entity->getImage()),
             'label' => $entity->getLabel(),
         ];
-
-        return $normalizedEntity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof AbstractCustomEntity && in_array($format, $this->supportedFormats);
@@ -40,12 +31,13 @@ class DefaultValuesStandardNormalizer implements NormalizerInterface
 
     protected function getFileData(?FileInfoInterface $fileInfo): array
     {
-        if (!$fileInfo) {
+        if (!$fileInfo instanceof FileInfoInterface) {
             return [];
         }
+
         return [
             'originalFilename' => $fileInfo->getOriginalFilename(),
-            'filePath' => $fileInfo->getKey()
+            'filePath' => $fileInfo->getKey(),
         ];
     }
 }

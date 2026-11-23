@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
- * Job constraint for Quick Export in CSV
+ * Job constraint for Quick Export in CSV.
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
@@ -23,19 +23,12 @@ class QuickCsvExport implements ConstraintCollectionProviderInterface
     /** @var array */
     protected $supportedJobNames;
 
-    /**
-     * @param ConstraintCollectionProviderInterface $simpleProvider
-     * @param array                                 $supportedJobNames
-     */
     public function __construct(ConstraintCollectionProviderInterface $simpleProvider, array $supportedJobNames)
     {
         $this->simpleProvider = $simpleProvider;
         $this->supportedJobNames = $supportedJobNames;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConstraintCollection()
     {
         $baseConstraint = $this->simpleProvider->getConstraintCollection();
@@ -46,9 +39,6 @@ class QuickCsvExport implements ConstraintCollectionProviderInterface
         return new Collection(['fields' => $constraintFields]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(JobInterface $job)
     {
         return in_array($job->getName(), $this->supportedJobNames);

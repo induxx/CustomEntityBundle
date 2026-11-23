@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Event;
 
 use Pim\Bundle\CustomEntityBundle\Action\ActionInterface;
@@ -12,25 +14,16 @@ use Pim\Bundle\CustomEntityBundle\Action\ActionInterface;
 class PreRenderActionEvent extends ActionEvent
 {
     /**
-     * @var string
-     */
-    protected $template;
-
-    /**
      * @var array
      */
     protected $templateVars;
 
     /**
-     * @param ActionInterface $action
-     * @param string          $template
-     * @param array           $templateVars
+     * @param string $template
      */
-    public function __construct(ActionInterface $action, $template, array $templateVars)
+    public function __construct(ActionInterface $action, protected $template, array $templateVars)
     {
         parent::__construct($action);
-
-        $this->template = $template;
         $this->templateVars = $templateVars;
     }
 
@@ -53,7 +46,7 @@ class PreRenderActionEvent extends ActionEvent
     /**
      * @param string $template
      */
-    public function setTemplate($template)
+    public function setTemplate($template): void
     {
         $this->template = $template;
     }
@@ -61,7 +54,7 @@ class PreRenderActionEvent extends ActionEvent
     /**
      * @param array $templateVars
      */
-    public function setTemplateVars($templateVars)
+    public function setTemplateVars($templateVars): void
     {
         $this->templateVars = $templateVars;
     }

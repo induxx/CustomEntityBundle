@@ -2,27 +2,24 @@
 
 namespace spec\Pim\Bundle\CustomEntityBundle\Metadata;
 
-use Acme\Bundle\CustomBundle\Entity\Pictogram;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use PhpSpec\ObjectBehavior;
-use Pim\Bundle\CustomEntityBundle\Metadata\ClassMetadataRegistry;
 use Pim\Bundle\CustomEntityBundle\Metadata\TargetEntityResolver;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class TargetEntityResolverSpec extends ObjectBehavior
 {
-    function let(EntityManagerInterface $em)
+    public function let(EntityManagerInterface $em): void
     {
         $this->beConstructedWith($em);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(TargetEntityResolver::class);
     }
 
-    function it_returns_a_target_entity_class_name_from_its_property($em, ClassMetadata $classMetadata)
+    public function it_returns_a_target_entity_class_name_from_its_property($em, ClassMetadata $classMetadata): void
     {
         $object = new FakeEntity();
 
@@ -33,7 +30,7 @@ class TargetEntityResolverSpec extends ObjectBehavior
         $this->getTargetEntityClass($object, 'foo')->shouldReturn('bar');
     }
 
-    function it_throws_a_logic_exception_if_the_association_has_no_target($em, ClassMetadata $classMetadata)
+    public function it_throws_a_logic_exception_if_the_association_has_no_target($em, ClassMetadata $classMetadata): void
     {
         $object = new \stdClass();
 

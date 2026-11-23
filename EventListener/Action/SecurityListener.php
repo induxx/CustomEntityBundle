@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * ACL listener for actions
+ * ACL listener for actions.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -32,35 +32,26 @@ class SecurityListener implements EventSubscriberInterface
      */
     protected $securityFacade;
 
-    /**
-     * @param ActionFactory  $actionFactory
-     * @param SecurityFacade $securityFacade
-     */
     public function __construct(ActionFactory $actionFactory, SecurityFacade $securityFacade)
     {
         $this->actionFactory = $actionFactory;
         $this->securityFacade = $securityFacade;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
             ConfigurationEvents::CONFIGURE => 'setConfigurationOptions',
             ActionEvents::CONFIGURE => 'setDefaultOptions',
             ActionEvents::PRE_EXECUTE => 'checkGranted',
-            ActionEvents::PRE_RENDER => 'removeCreateLink'
+            ActionEvents::PRE_RENDER => 'removeCreateLink',
         ];
     }
 
     /**
-     * Adds options to the configuration
-     *
-     * @param ConfigurationEvent $event
+     * Adds options to the configuration.
      */
-    public function setConfigurationOptions(ConfigurationEvent $event)
+    public function setConfigurationOptions(ConfigurationEvent $event): void
     {
         $resolver = $event->getOptionsResolver();
         $resolver->setDefined(['acl', 'acl_prefix']);
@@ -68,11 +59,9 @@ class SecurityListener implements EventSubscriberInterface
     }
 
     /**
-     * Adds options to the actions
-     *
-     * @param ConfigureActionEvent $event
+     * Adds options to the actions.
      */
-    public function setDefaultOptions(ConfigureActionEvent $event)
+    public function setDefaultOptions(ConfigureActionEvent $event): void
     {
         $resolver = $event->getOptionsResolver();
 
@@ -82,12 +71,13 @@ class SecurityListener implements EventSubscriberInterface
         } else {
             $resolver->setDefined(['acl']);
         }
+
         $resolver->setDefined(['acl_suffix']);
         $resolver->setNormalizer(
             'acl',
-            function ($actionOptions, $acl) use ($options) {
+            function (array $actionOptions, $acl) use ($options) {
                 if (null === $acl && isset($options['acl_prefix']) && isset($actionOptions['acl_suffix'])) {
-                    return $options['acl_prefix'] . $options['acl_separator'] .
+                    return $options['acl_prefix'].$options['acl_separator'].
                         $actionOptions['acl_suffix'];
                 }
 
@@ -97,27 +87,22 @@ class SecurityListener implements EventSubscriberInterface
     }
 
     /**
-     * Throws an exception if ACL is set and is not granted
-     *
-     * @param ActionEvent $event
+     * Throws an exception if ACL is set and is not granted.
      *
      * @throws AccessDeniedHttpException
      */
-    public function checkGranted(ActionEvent $event)
+    public function checkGranted(ActionEvent $event): void
     {
         $options = $event->getAction()->getOptions();
         if (isset($options['acl']) && !$this->securityFacade->isGranted($options['acl'])) {
-            throw new AccessDeniedHttpException;
+            throw new AccessDeniedHttpException();
         }
     }
 
     /**
-     * Removes the create link if no ACLS
-     *
-     * @param  PreRenderActionEvent $event
-     * @return type
+     * Removes the create link if no ACLS.
      */
-    public function removeCreateLink(PreRenderActionEvent $event)
+    public function removeCreateLink(PreRenderActionEvent $event): void
     {
         $action = $event->getAction();
         if ('index' != $action->getType()) {

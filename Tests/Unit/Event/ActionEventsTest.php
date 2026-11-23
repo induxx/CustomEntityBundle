@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\CustomEntityBundle\Tests\Unit\Event;
 
+use Pim\Bundle\CustomEntityBundle\Configuration\ConfigurationInterface;
 use PHPUnit\Framework\TestCase;
 use Pim\Bundle\CustomEntityBundle\Action\ActionInterface;
 use Pim\Bundle\CustomEntityBundle\Event\ActionEvent;
@@ -47,15 +48,19 @@ class ActionEventsTest extends TestCase
         $dispatcher = new EventDispatcher();
         $manager = new ActionEventManager($dispatcher);
         $response = new Response('new');
-        $dispatcher->addListener(ActionEvents::POST_EXECUTE, static function (PostExecuteActionEvent $event) use ($response): void { $event->setResponse($response); });
+        $dispatcher->addListener(ActionEvents::POST_EXECUTE, static function (PostExecuteActionEvent $event) use ($response): void {
+            $event->setResponse($response);
+        });
         self::assertSame($response, $manager->dispatchPostExecuteEvent($action, new Response('old')));
-        $dispatcher->addListener(ActionEvents::PRE_RENDER, static function (PreRenderActionEvent $event): void { $event->setTemplate('changed'); });
+        $dispatcher->addListener(ActionEvents::PRE_RENDER, static function (PreRenderActionEvent $event): void {
+            $event->setTemplate('changed');
+        });
         self::assertSame(['changed', ['x' => 1]], $manager->dispatchPreRenderEvent($action, 'original', ['x' => 1]));
     }
 
     public function testConfigurationEventExposesCollaborators(): void
     {
-        $configuration = $this->createMock(\Pim\Bundle\CustomEntityBundle\Configuration\ConfigurationInterface::class);
+        $configuration = $this->createMock(ConfigurationInterface::class);
         $resolver = new OptionsResolver();
         $event = new ConfigurationEvent($configuration, $resolver);
         self::assertSame($configuration, $event->getConfiguration());

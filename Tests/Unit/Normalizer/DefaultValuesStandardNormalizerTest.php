@@ -19,9 +19,16 @@ class DefaultValuesStandardNormalizerTest extends TestCase
 
     public function testNormalizesEntityFieldsAndEmptyImage(): void
     {
-        $entity = new class extends AbstractCustomEntity {
-            public function getImage() { return null; }
-            public function getLabel() { return ['en_US' => 'Red']; }
+        $entity = new class () extends AbstractCustomEntity {
+            public function getImage(): null
+            {
+                return null;
+            }
+
+            public function getLabel(): array
+            {
+                return ['en_US' => 'Red'];
+            }
         };
         $entity->setCode('red');
         self::assertSame(['id' => null, 'code' => 'red', 'image' => [], 'label' => ['en_US' => 'Red']], (new DefaultValuesStandardNormalizer())->normalize($entity, 'standard'));

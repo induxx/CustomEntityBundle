@@ -14,70 +14,70 @@ use Acme\Bundle\CustomBundle\Entity\Pictogram;
  */
 class CustomEntityExportTest extends AbstractJobTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadData();
     }
 
-    public function testExportSimpleReferenceData()
+    public function testExportSimpleReferenceData(): void
     {
         $this->createJobInstance(
             'csv_reference_data_export',
             'export',
             'color',
-            static::EXPORT_PATH . 'export_colors.csv'
+            static::EXPORT_PATH.'export_colors.csv'
         );
 
         $content = $this->launchExport('csv_reference_data_export');
 
-        $this->assertEquals(file_get_contents(static::DATA_FILE_PATH . 'colors.csv'), $content);
+        $this->assertEquals(file_get_contents(static::DATA_FILE_PATH.'colors.csv'), $content);
     }
 
-    public function testExportTranslatableReferenceData()
+    public function testExportTranslatableReferenceData(): void
     {
         $this->createJobInstance(
             'csv_reference_data_export',
             'export',
             'pictogram',
-            static::EXPORT_PATH . 'export_pictos.csv'
+            static::EXPORT_PATH.'export_pictos.csv'
         );
 
         $content = $this->launchExport('csv_reference_data_export');
 
-        $this->assertEquals(file_get_contents(static::DATA_FILE_PATH . 'pictos.csv'), $content);
+        $this->assertEquals(file_get_contents(static::DATA_FILE_PATH.'pictos.csv'), $content);
     }
 
-    public function testExportLinkedReferenceData()
+    public function testExportLinkedReferenceData(): void
     {
         $this->createJobInstance(
             'csv_reference_data_export',
             'export',
             'brand',
-            static::EXPORT_PATH . 'export_brands.csv'
+            static::EXPORT_PATH.'export_brands.csv'
         );
 
 
         $content = $this->launchExport('csv_reference_data_export');
 
-        $this->assertEquals(file_get_contents(static::DATA_FILE_PATH . 'brands.csv'), $content);
+        $this->assertEquals(file_get_contents(static::DATA_FILE_PATH.'brands.csv'), $content);
     }
 
-    public function testExportCollectionLinkedReferenceData()
+    public function testExportCollectionLinkedReferenceData(): void
     {
         $this->createJobInstance(
             'csv_reference_data_export',
             'export',
             'fabric',
-            static::EXPORT_PATH . 'export_fabrics.csv'
+            static::EXPORT_PATH.'export_fabrics.csv'
         );
 
         $content = $this->launchExport('csv_reference_data_export');
 
-        $this->assertEquals(file_get_contents(static::DATA_FILE_PATH . 'fabrics.csv'), $content);
+        $this->assertEquals(file_get_contents(static::DATA_FILE_PATH.'fabrics.csv'), $content);
     }
 
-    private function loadData()
+    private function loadData(): void
     {
         $this->activateLocales('fr_FR', 'de_DE');
         $colors = [

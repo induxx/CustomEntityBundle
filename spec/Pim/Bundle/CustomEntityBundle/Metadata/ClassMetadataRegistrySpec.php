@@ -9,22 +9,22 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class ClassMetadataRegistrySpec extends ObjectBehavior
 {
-    function let(PropertyAccessorInterface $propertyAccessor)
+    public function let(PropertyAccessorInterface $propertyAccessor): void
     {
         $this->beConstructedWith($propertyAccessor);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ClassMetadataRegistry::class);
     }
 
-    function it_returns_reflection_class_from_a_class_name()
+    public function it_returns_reflection_class_from_a_class_name(): void
     {
         $this->getReflectionClass(Pictogram::class)->shouldHaveType(\ReflectionClass::class);
     }
 
-    function it_returns_readable_properties_from_an_object($propertyAccessor)
+    public function it_returns_readable_properties_from_an_object($propertyAccessor): void
     {
         $object = new FakeEntity();
 

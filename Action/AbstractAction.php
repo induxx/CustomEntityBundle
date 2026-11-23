@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\CustomEntityBundle\Action;
 
+use Pim\Bundle\CustomEntityBundle\Manager\ManagerInterface;
 use Pim\Bundle\CustomEntityBundle\Configuration\ConfigurationInterface;
 use Pim\Bundle\CustomEntityBundle\Event\ActionEventManager;
 use Pim\Bundle\CustomEntityBundle\Manager\Registry as ManagerRegistry;
@@ -57,10 +58,6 @@ abstract class AbstractAction implements RouteAwareActionInterface
     protected $options;
 
     /**
-     * @param ActionFactory       $actionFactory
-     * @param ActionEventManager  $eventManager
-     * @param ManagerRegistry     $managerRegistry
-     * @param RouterInterface     $router
      * @param TranslatorInterface $translator
      */
     public function __construct(
@@ -68,7 +65,7 @@ abstract class AbstractAction implements RouteAwareActionInterface
         ActionEventManager $eventManager,
         ManagerRegistry $managerRegistry,
         RouterInterface $router,
-        TranslatorDecorator $translator
+        TranslatorDecorator $translator,
     ) {
         $this->actionFactory = $actionFactory;
         $this->eventManager = $eventManager;
@@ -77,9 +74,6 @@ abstract class AbstractAction implements RouteAwareActionInterface
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setConfiguration(ConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;
@@ -89,25 +83,16 @@ abstract class AbstractAction implements RouteAwareActionInterface
         $this->options = $resolver->resolve($configuration->getActionOptions($this->getType()));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration(): ConfigurationInterface
     {
         return $this->configuration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoute(): string
     {
         return $this->options['route'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteParameters($object = null)
     {
         $parameters = ['customEntityName' => $this->configuration->getName()];
@@ -118,9 +103,6 @@ abstract class AbstractAction implements RouteAwareActionInterface
         return $parameters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOptions(): array
     {
         return $this->options;
@@ -129,23 +111,18 @@ abstract class AbstractAction implements RouteAwareActionInterface
     /**
      * @param string $optionKey
      *
-     * @return mixed
      * @throws \LogicException
      */
     protected function getOption($optionKey)
     {
         if (isset($this->options[$optionKey])) {
             return $this->options[$optionKey];
-        } else {
-            throw new \LogicException(
-                sprintf('Option "%s" is not defined', $optionKey)
-            );
         }
+        throw new \LogicException(
+            sprintf('Option "%s" is not defined', $optionKey)
+        );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(Request $request): Response
     {
         $this->eventManager->dispatchPreExecuteEvent($this);
@@ -155,9 +132,7 @@ abstract class AbstractAction implements RouteAwareActionInterface
     }
 
     /**
-     * Set the default options
-     *
-     * @param OptionsResolver $resolver
+     * Set the default options.
      */
     protected function setDefaultOptions(OptionsResolver $resolver)
     {
@@ -166,12 +141,11 @@ abstract class AbstractAction implements RouteAwareActionInterface
     }
 
     /**
-     * Returns the url for a specified action
+     * Returns the url for a specified action.
      *
      * @param string $actionType
      * @param object $object
      * @param array  $parameters
-     * @param mixed  $referenceType
      *
      * @return string
      */
@@ -179,7 +153,7 @@ abstract class AbstractAction implements RouteAwareActionInterface
         $actionType,
         $object = null,
         $parameters = [],
-        $referenceType = Router::ABSOLUTE_PATH
+        $referenceType = Router::ABSOLUTE_PATH,
     ) {
         $action = ($actionType === $this->getType())
             ? $this
@@ -193,12 +167,11 @@ abstract class AbstractAction implements RouteAwareActionInterface
     }
 
     /**
-     * Returns the entity of the request
+     * Returns the entity of the request.
      *
-     * @param Request $request
+     * @return object
      *
      * @throws NotFoundHttpException
-     * @return object
      */
     protected function findEntity(Request $request)
     {
@@ -216,12 +189,10 @@ abstract class AbstractAction implements RouteAwareActionInterface
     }
 
     /**
-     * Adds a flash message
+     * Adds a flash message.
      *
-     * @param Request $request
-     * @param string  $type
-     * @param string  $message
-     * @param array   $messageParameters
+     * @param string $type
+     * @param string $message
      */
     protected function addFlash(Request $request, $type, $message, array $messageParameters = [])
     {
@@ -230,9 +201,9 @@ abstract class AbstractAction implements RouteAwareActionInterface
     }
 
     /**
-     * Returns the custom entity manager
+     * Returns the custom entity manager.
      *
-     * @return \Pim\Bundle\CustomEntityBundle\Manager\ManagerInterface
+     * @return ManagerInterface
      */
     protected function getManager()
     {
@@ -240,11 +211,9 @@ abstract class AbstractAction implements RouteAwareActionInterface
     }
 
     /**
-     * Executes the action
+     * Executes the action.
      *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     abstract public function doExecute(Request $request);
 }

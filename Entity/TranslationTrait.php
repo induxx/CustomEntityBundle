@@ -3,7 +3,7 @@
 namespace Pim\Bundle\CustomEntityBundle\Entity;
 
 /**
- * Trait for translation entities
+ * Trait for translation entities.
  *
  * @see       Akeneo\Tool\Component\Localization\Model\TranslationInterface
  *
@@ -23,7 +23,7 @@ trait TranslationTrait
     protected $foreignKey;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int $id
      */
@@ -33,11 +33,9 @@ trait TranslationTrait
     }
 
     /**
-     * Sets locale
+     * Sets locale.
      *
      * @param string $locale
-     *
-     * @return TranslationTrait
      */
     public function setLocale($locale): TranslationTrait
     {
@@ -47,7 +45,7 @@ trait TranslationTrait
     }
 
     /**
-     * Gets locale
+     * Gets locale.
      *
      * @return string $locale
      */
@@ -57,11 +55,9 @@ trait TranslationTrait
     }
 
     /**
-     * Sets foreignKey
+     * Sets foreignKey.
      *
      * @param int $foreignKey
-     *
-     * @return TranslationTrait
      */
     public function setForeignKey($foreignKey): TranslationTrait
     {
@@ -71,7 +67,7 @@ trait TranslationTrait
     }
 
     /**
-     * Gets foreignKey
+     * Gets foreignKey.
      *
      * @return int $foreignKey
      */

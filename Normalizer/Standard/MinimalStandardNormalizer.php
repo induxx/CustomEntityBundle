@@ -14,29 +14,20 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  */
 class MinimalStandardNormalizer implements NormalizerInterface
 {
-    /** @var array $supportedFormats */
+    /** @var array */
     protected $supportedFormats = ['standard'];
 
     /**
      * @param AbstractCustomEntity $entity
-     * @param null                 $format
-     * @param array                $context
-     *
-     * @return array
      */
     public function normalize($entity, $format = null, array $context = []): array
     {
-        $normalizedEntity = [
+        return [
             'id'   => $entity->getId(),
             'code' => $entity->getCode(),
         ];
-
-        return $normalizedEntity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof AbstractCustomEntity && in_array($format, $this->supportedFormats);

@@ -2,14 +2,12 @@
 
 namespace Pim\Bundle\CustomEntityBundle\Entity;
 
-use Akeneo\Channel\Infrastructure\Component\Model\Locale;
 use Akeneo\Tool\Component\FileStorage\Model\FileInfoInterface;
-use Induxx\Bundle\ReferenceDataBundle\Entity\ReferenceColorParent;
-use Webmozart\Assert\Assert;
 
 trait DefaultValuesTrait
 {
     private ?FileInfoInterface $image;
+
     private ?string $label = null;
 
     public function getLabel(): ?string

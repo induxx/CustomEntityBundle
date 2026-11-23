@@ -15,7 +15,7 @@ use Pim\Bundle\CustomEntityBundle\Tests\Jobs\AbstractJobTestCase;
  */
 class CustomEntityImportTest extends AbstractJobTestCase
 {
-    public function testImportSimpleReferenceData()
+    public function testImportSimpleReferenceData(): void
     {
         $this->createReferenceData(
             Color::class,
@@ -35,7 +35,7 @@ class CustomEntityImportTest extends AbstractJobTestCase
         $this->assertEquals('Some name', $blue->getName());
         $this->assertEquals(18, $blue->getRed());
 
-        $filePath = static::DATA_FILE_PATH . 'colors.csv';
+        $filePath = static::DATA_FILE_PATH.'colors.csv';
         $this->createJobInstance(
             'csv_colors_import',
             'import',
@@ -54,7 +54,7 @@ class CustomEntityImportTest extends AbstractJobTestCase
         $this->assertEquals(255, $blue->getBlue());
     }
 
-    public function testImportLinkedReferenceData()
+    public function testImportLinkedReferenceData(): void
     {
         $this->createReferenceData(Brand::class, ['code' => 'super_brand']);
 
@@ -78,7 +78,7 @@ class CustomEntityImportTest extends AbstractJobTestCase
             $this->createReferenceData(Fabric::class, $fabric);
         }
 
-        $filePath = static::DATA_FILE_PATH . 'brands.csv';
+        $filePath = static::DATA_FILE_PATH.'brands.csv';
         $this->createJobInstance(
             'csv_brands_import',
             'import',
@@ -96,7 +96,7 @@ class CustomEntityImportTest extends AbstractJobTestCase
         $this->assertEquals('Another fabric', $brand->getFabric()->getName());
     }
 
-    public function testImportTranslatableReferenceData()
+    public function testImportTranslatableReferenceData(): void
     {
         $this->activateLocales('fr_FR', 'de_DE');
 
@@ -116,7 +116,7 @@ class CustomEntityImportTest extends AbstractJobTestCase
         $this->assertCount(1, $picto1->getTranslations());
         $this->assertEquals('an English label', $picto1->getTranslation('en_US')->getLabel());
 
-        $filePath = static::DATA_FILE_PATH . 'pictos.csv';
+        $filePath = static::DATA_FILE_PATH.'pictos.csv';
         $this->createJobInstance(
             'csv_pictos_import',
             'import',
@@ -135,7 +135,7 @@ class CustomEntityImportTest extends AbstractJobTestCase
         $this->assertEquals('label 1 de', $picto1->getTranslation('de_DE')->getLabel());
     }
 
-    public function testImportCollectionLinkedReferenceData()
+    public function testImportCollectionLinkedReferenceData(): void
     {
         $colors = [
             [
@@ -166,6 +166,7 @@ class CustomEntityImportTest extends AbstractJobTestCase
         foreach ($colors as $color) {
             $this->createReferenceData(Color::class, $color);
         }
+
         $this->createReferenceData(
             Fabric::class,
             [
@@ -185,7 +186,7 @@ class CustomEntityImportTest extends AbstractJobTestCase
             $this->assertContains($color->getCode(), ['red', 'blue']);
         }
 
-        $filePath = static::DATA_FILE_PATH . 'fabrics.csv';
+        $filePath = static::DATA_FILE_PATH.'fabrics.csv';
         $this->createJobInstance(
             'csv_fabrics_import',
             'import',

@@ -2,6 +2,8 @@
 
 namespace Pim\Bundle\CustomEntityBundle\Tests\Unit\Action;
 
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use PHPUnit\Framework\TestCase;
 use Pim\Bundle\CustomEntityBundle\Action\ActionFactory;
 use Pim\Bundle\CustomEntityBundle\Action\QuickExportAction;
@@ -43,6 +45,7 @@ class RestActionsTest extends TestCase
         $configuration->method('getOptions')->willReturn(['edit_form_extension' => []]);
         $manager = $this->createMock(ManagerInterface::class);
         $registry->method('getFromConfiguration')->with($configuration)->willReturn($manager);
+
         return [$factory, $events, $registry, $configuration, $manager];
     }
 
@@ -59,6 +62,7 @@ class RestActionsTest extends TestCase
         $normalizer = $this->createMock(NormalizerInterface::class);
         $action = new CreateAction($factory, $events, $registry, $validator, $normalizer);
         $action->setConfiguration($configuration);
+
         $response = $action->execute(new Request([], [], [], [], [], [], '{"code":"x"}'));
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(['customEntityName' => 'example', 'id' => 17], json_decode($response->getContent(), true));
@@ -83,8 +87,10 @@ class RestActionsTest extends TestCase
         $manager->expects(self::once())->method('normalize')->with($entity, 'internal_api', ['customEntityName' => 'example', 'form' => []])->willReturn(['id' => 8]);
         $action = new GetAction($factory, $events, $registry);
         $action->setConfiguration($configuration);
+
         $request = new Request();
         $request->attributes->set('id', '8');
+
         $response = $action->execute($request);
         self::assertSame(['id' => 8], json_decode($response->getContent(), true));
     }
@@ -111,6 +117,7 @@ class RestActionsTest extends TestCase
         $manager->expects(self::once())->method('remove')->with($entity);
         $action = new DeleteAction($factory, $events, $registry);
         $action->setConfiguration($configuration);
+
         $request = new Request();
         $request->attributes->set('id', '3');
         self::assertSame(204, $action->execute($request)->getStatusCode());
@@ -129,6 +136,7 @@ class RestActionsTest extends TestCase
         $validator->method('validate')->willReturn(new \ArrayIterator());
         $action = new UpdateAction($factory, $events, $registry, $validator, $this->createMock(NormalizerInterface::class));
         $action->setConfiguration($configuration);
+
         $request = new Request([], [], ['id' => '4'], [], [], [], '{"code":"new"}');
         self::assertSame(['code' => 'new'], json_decode($action->execute($request)->getContent(), true));
     }
@@ -147,8 +155,8 @@ class RestActionsTest extends TestCase
         $jobs->method('findOneBy')->willReturn($job);
         $parser = $this->createMock(MassActionParametersParser::class);
         $parser->method('parse')->willReturn(['values' => [4, 9]]);
-        $user = $this->createMock(\Symfony\Component\Security\Core\User\UserInterface::class);
-        $token = $this->createMock(\Symfony\Component\Security\Core\Authentication\Token\TokenInterface::class);
+        $user = $this->createMock(UserInterface::class);
+        $token = $this->createMock(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
         $storage = $this->createMock(TokenStorageInterface::class);
         $storage->method('getToken')->willReturn($token);

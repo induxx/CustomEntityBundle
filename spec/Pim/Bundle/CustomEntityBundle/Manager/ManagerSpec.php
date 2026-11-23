@@ -19,37 +19,37 @@ class ManagerSpec extends ObjectBehavior
         Updater $updater,
         SaverInterface $saver,
         RemoverInterface $remover,
-        NormalizerInterface $normalizer
-    ) {
+        NormalizerInterface $normalizer,
+    ): void {
         $this->beConstructedWith($em, $updater, $saver, $remover, $normalizer);
     }
 
-    public function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(Manager::class);
     }
 
-    public function it_creates_objects($updater)
+    public function it_creates_objects($updater): void
     {
         $updater->update(Argument::type('stdClass'), ['key1' => 'value1', 'key2' => 'value2'])->shouldBeCalled();
         $this->create('stdClass', ['key1' => 'value1', 'key2' => 'value2'])->shouldHaveType('stdClass');
     }
 
-    public function it_finds_objects($em, EntityRepository $repository)
+    public function it_finds_objects($em, EntityRepository $repository): void
     {
         $em->getRepository('entity_class')->willReturn($repository);
         $repository->find('id')->willReturn('success');
         $this->find('entity_class', 'id')->shouldReturn('success');
     }
 
-    public function it_saves_objects($saver)
+    public function it_saves_objects($saver): void
     {
         $object = new \stdClass();
         $saver->save($object, [])->shouldBeCalled();
         $this->save($object, []);
     }
 
-    public function it_removes_objects($remover)
+    public function it_removes_objects($remover): void
     {
         $object = new \stdClass();
         $remover->remove($object)->shouldBeCalled();

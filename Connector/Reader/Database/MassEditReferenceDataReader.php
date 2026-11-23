@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
 use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
 
 /**
- * Reference data reader for quick export mass action
+ * Reference data reader for quick export mass action.
  *
  * @author    Romain Monceau <romain@akeneo.com>
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
@@ -28,24 +28,17 @@ class MassEditReferenceDataReader implements ItemReaderInterface, StepExecutionA
     /** @var ArrayCollection */
     protected $referenceDatas;
 
-    /** @var  ConfigurationRegistry */
+    /** @var ConfigurationRegistry */
     protected $registry;
 
-    /**
-     * @param EntityManager         $em
-     * @param ConfigurationRegistry $registry
-     */
     public function __construct(
         EntityManager $em,
-        ConfigurationRegistry $registry
+        ConfigurationRegistry $registry,
     ) {
         $this->em = $em;
         $this->registry = $registry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read()
     {
         if (null === $this->referenceDatas) {
@@ -70,18 +63,17 @@ class MassEditReferenceDataReader implements ItemReaderInterface, StepExecutionA
     }
 
     /**
-     * Get reference data entities from ids
+     * Get reference data entities from ids.
      *
      * @param string $referenceDataName
-     * @param array  $ids
      *
      * @return ArrayCollection
      */
     protected function getReferenceDatas($referenceDataName, array $ids)
     {
         $repository = $this->getRepository($referenceDataName);
-        
-        if (empty($ids)) {
+
+        if ([] === $ids) {
             return new ArrayCollection($repository->findAll());
         }
 
@@ -90,18 +82,13 @@ class MassEditReferenceDataReader implements ItemReaderInterface, StepExecutionA
 
     /**
      * @param string $referenceDataName
-     *
-     * @return CustomEntityRepository
      */
-    protected function getRepository($referenceDataName)
+    protected function getRepository($referenceDataName): CustomEntityRepository
     {
         return $this->em->getRepository($referenceDataName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setStepExecution(StepExecution $stepExecution)
+    public function setStepExecution(StepExecution $stepExecution): void
     {
         $this->stepExecution = $stepExecution;
     }

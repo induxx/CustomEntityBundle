@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Event manager for actions
+ * Event manager for actions.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -22,9 +22,7 @@ class ActionEventManager
     protected $eventDispatcher;
 
     /**
-     * Constructor
-     *
-     * @param EventDispatcherInterface $eventDispatcher
+     * Constructor.
      */
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
@@ -32,10 +30,7 @@ class ActionEventManager
     }
 
     /**
-     * Dispatches the ActionEvents::CONFIGURE event
-     *
-     * @param ActionInterface $action
-     * @param OptionsResolver $optionsResolver
+     * Dispatches the ActionEvents::CONFIGURE event.
      */
     public function dipatchConfigureEvent(ActionInterface $action, OptionsResolver $optionsResolver): void
     {
@@ -44,9 +39,7 @@ class ActionEventManager
     }
 
     /**
-     * Dispatches the ActionEvents::PRE_EXECUTE event
-     *
-     * @param ActionInterface $action
+     * Dispatches the ActionEvents::PRE_EXECUTE event.
      */
     public function dispatchPreExecuteEvent(ActionInterface $action): void
     {
@@ -55,12 +48,7 @@ class ActionEventManager
     }
 
     /**
-     * Dispatches the ActionEvents::POST_EXECUTE event, and returns the modified response
-     *
-     * @param ActionInterface $action
-     * @param Response        $response
-     *
-     * @return Response
+     * Dispatches the ActionEvents::POST_EXECUTE event, and returns the modified response.
      */
     public function dispatchPostExecuteEvent(ActionInterface $action, Response $response): Response
     {
@@ -71,15 +59,11 @@ class ActionEventManager
     }
 
     /**
-     * Dispatches the ActionEvents::PRE_RENDER event, and returns an array containing the template ant its parameters
+     * Dispatches the ActionEvents::PRE_RENDER event, and returns an array containing the template ant its parameters.
      *
-     * @param ActionInterface $action
-     * @param string          $template
-     * @param array           $templateVars
-     *
-     * @return array
+     * @param string $template
      */
-    public function dispatchPreRenderEvent(ActionInterface $action, $template, array $templateVars)
+    public function dispatchPreRenderEvent(ActionInterface $action, $template, array $templateVars): array
     {
         $event = new PreRenderActionEvent($action, $template, $templateVars);
         $this->eventDispatcher->dispatch($event, ActionEvents::PRE_RENDER);

@@ -2,6 +2,7 @@
 
 namespace spec\Pim\Bundle\CustomEntityBundle\Entity;
 
+use Akeneo\Tool\Component\Localization\Model\TranslatableInterface;
 use Acme\Bundle\CustomBundle\Entity\PictogramTranslation;
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractTranslatableCustomEntity;
@@ -21,28 +22,28 @@ class TranslatableCustomEntity extends AbstractTranslatableCustomEntity
 
 class TranslatableCustomEntitySpec extends ObjectBehavior
 {
-    function let()
+    public function let(): void
     {
         $this->beAnInstanceOf('spec\Pim\Bundle\CustomEntityBundle\Entity\TranslatableCustomEntity');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
-        $this->shouldHaveType('Pim\Bundle\CustomEntityBundle\Entity\AbstractTranslatableCustomEntity');
+        $this->shouldHaveType(AbstractTranslatableCustomEntity::class);
     }
 
-    function it_is_translatable()
+    public function it_is_translatable(): void
     {
-        $this->shouldImplement('Akeneo\Tool\Component\Localization\Model\TranslatableInterface');
+        $this->shouldImplement(TranslatableInterface::class);
     }
 
-    function it_gets_a_translation()
+    public function it_gets_a_translation(): void
     {
         $this->getTranslationFQCN();
         $this->getTranslation('en_US')->shouldHaveType(PictogramTranslation::class);
     }
 
-    function it_gets_null_translation_when_no_locale()
+    public function it_gets_null_translation_when_no_locale(): void
     {
         $this->getTranslationFQCN();
         $this->getTranslation(null)->shouldReturn(null);

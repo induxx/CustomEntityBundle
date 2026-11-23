@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pim\Bundle\CustomEntityBundle\Configuration\Registry;
 
 /**
- * Reference data database reader
+ * Reference data database reader.
  *
  * @author    Romain Monceau <romain@akeneo.com>
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
@@ -21,19 +21,12 @@ class ReferenceDataReader extends AbstractReader
     /** @var EntityManagerInterface */
     protected $em;
 
-    /**
-     * @param Registry $confRegistry
-     * @param EntityManagerInterface $em
-     */
     public function __construct(Registry $confRegistry, EntityManagerInterface $em)
     {
         $this->confRegistry = $confRegistry;
         $this->em           = $em;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getResults()
     {
         $referenceDataName  = $this->stepExecution->getJobParameters()->get('reference_data_name');

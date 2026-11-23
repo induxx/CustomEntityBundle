@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Entity\Repository;
 
 /**
- * Repository for translatable custom options
+ * Repository for translatable custom options.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)

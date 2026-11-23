@@ -9,20 +9,20 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ConfigurationSpec extends ObjectBehavior
 {
-    public function let(EventDispatcherInterface $eventDispatcher)
+    public function let(EventDispatcherInterface $eventDispatcher): void
     {
-        $eventDispatcher->dispatch(Argument::type('object'), Argument::any())->will(function ($args) { return $args[0]; });
+        $eventDispatcher->dispatch(Argument::type('object'), Argument::any())->will(fn ($args) => $args[0]);
         $this->beConstructedWith($eventDispatcher, 'entity', 'entity_class');
     }
 
-    public function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(Configuration::class);
         $this->getName()->shouldReturn('entity');
         $this->getEntityClass()->shouldReturn('entity_class');
     }
 
-    public function it_can_register_actions()
+    public function it_can_register_actions(): void
     {
         $this->addAction('action1', 'action1_service');
         $this->addAction('action2', 'action2_service', ['action2_options']);

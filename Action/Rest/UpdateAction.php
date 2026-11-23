@@ -27,28 +27,19 @@ class UpdateAction extends AbstractRestAction
 
     /**
      * CreateAction constructor.
-     *
-     * @param ActionFactory       $actionFactory
-     * @param ActionEventManager  $eventManager
-     * @param ManagerRegistry     $managerRegistry
-     * @param ValidatorInterface  $validator
-     * @param NormalizerInterface $violationNormalizer
      */
     public function __construct(
         ActionFactory $actionFactory,
         ActionEventManager $eventManager,
         ManagerRegistry $managerRegistry,
         ValidatorInterface $validator,
-        NormalizerInterface $violationNormalizer
+        NormalizerInterface $violationNormalizer,
     ) {
         parent::__construct($actionFactory, $eventManager, $managerRegistry);
         $this->validator = $validator;
         $this->violationNormalizer = $violationNormalizer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doExecute(Request $request): JsonResponse
     {
         $data = $this->getDecodedContent($request->getContent());
@@ -75,9 +66,6 @@ class UpdateAction extends AbstractRestAction
         return new JsonResponse($normalized);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'rest_update';
@@ -88,9 +76,9 @@ class UpdateAction extends AbstractRestAction
      *
      * @param string $content content of a request to decode
      *
-     * @throws BadRequestHttpException
-     *
      * @return array
+     *
+     * @throws BadRequestHttpException
      */
     protected function getDecodedContent($content)
     {

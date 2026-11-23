@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 class FQCNResolverSpec extends ObjectBehavior
 {
-    function let(ContainerInterface $container)
+    public function let(ContainerInterface $container): void
     {
         $container->getParameter(
             Argument::containingString('pim_catalog.entity.')
@@ -20,18 +20,18 @@ class FQCNResolverSpec extends ObjectBehavior
         $this->beConstructedWith($container);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(FQCNResolver::class);
     }
 
-    function it_resolves_fqcn_for_custom_entities($container)
+    public function it_resolves_fqcn_for_custom_entities($container): void
     {
         $container->getParameter('pim_custom_entity.entity.baz.class')->willReturn('Foo\Bar\Baz');
         $this->getFQCN('baz')->shouldReturn('Foo\Bar\Baz');
     }
 
-    function it_returns_null_for_an_unknown_parameter($container)
+    public function it_returns_null_for_an_unknown_parameter($container): void
     {
         $container->getParameter('pim_custom_entity.entity.baz.class')->willThrow(InvalidArgumentException::class);
         $this->getFQCN('baz')->shouldReturn(null);

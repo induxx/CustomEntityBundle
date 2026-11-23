@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Event;
 
 use Pim\Bundle\CustomEntityBundle\Action\ActionInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Basic event for actions
+ * Basic event for actions.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -19,16 +21,13 @@ class ActionEvent extends Event
      */
     protected $action;
 
-    /**
-     * @param ActionInterface $action
-     */
     public function __construct(ActionInterface $action)
     {
         $this->action = $action;
     }
 
     /**
-     * Returns the action launched by the event
+     * Returns the action launched by the event.
      *
      * @return ActionInterface
      */

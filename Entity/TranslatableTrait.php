@@ -6,7 +6,7 @@ use Akeneo\Tool\Component\Localization\Model\TranslationInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Trait for translatable entity
+ * Trait for translatable entity.
  *
  * @see       Akeneo\Tool\Component\Localization\Model\TranslatableInterface
  *
@@ -23,18 +23,17 @@ trait TranslatableTrait
     protected $locale;
 
     /**
-     * Gets translation for current locale
-     *
-     * @param null|string $locale
+     * Gets translation for current locale.
      *
      * @return TranslatableTrait
      */
     public function getTranslation(?string $locale = null)
     {
-        $locale = ($locale) ? $locale : $this->locale;
+        $locale = $locale ?: $this->locale;
         if (!$locale) {
             return null;
         }
+
         foreach ($this->getTranslations() as $translation) {
             if ($translation->getLocale() == $locale) {
                 return $translation;
@@ -51,9 +50,7 @@ trait TranslatableTrait
     }
 
     /**
-     * Gets translations
-     *
-     * @return ArrayCollection
+     * Gets translations.
      */
     public function getTranslations(): ArrayCollection
     {
@@ -61,11 +58,7 @@ trait TranslatableTrait
     }
 
     /**
-     * Adds translation
-     *
-     * @param TranslationInterface $translation
-     *
-     * @return TranslatableTrait
+     * Adds translation.
      */
     public function addTranslation(TranslationInterface $translation): TranslatableTrait
     {
@@ -77,9 +70,7 @@ trait TranslatableTrait
     }
 
     /**
-     * Removes translation
-     *
-     * @param TranslationInterface $translation
+     * Removes translation.
      *
      * @return TranslatableTrait
      */
@@ -91,14 +82,14 @@ trait TranslatableTrait
     }
 
     /**
-     * Gets translation full qualified class name
+     * Gets translation full qualified class name.
      *
      * @return string
      */
     abstract public function getTranslationFQCN();
 
     /**
-     * Sets the locale used for translation
+     * Sets the locale used for translation.
      *
      * @param string $locale
      *

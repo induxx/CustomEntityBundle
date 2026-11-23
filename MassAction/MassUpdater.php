@@ -5,7 +5,7 @@ namespace Pim\Bundle\CustomEntityBundle\MassAction;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * Mass action updater
+ * Mass action updater.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -19,9 +19,7 @@ class MassUpdater
     protected $doctrine;
 
     /**
-     * Constructor
-     *
-     * @param RegistryInterface $doctrine
+     * Constructor.
      */
     public function __construct(RegistryInterface $doctrine)
     {
@@ -29,11 +27,7 @@ class MassUpdater
     }
 
     /**
-     * Mass updates entities
-     *
-     * @param string $class
-     * @param array  $data
-     * @param array  $ids
+     * Mass updates entities.
      */
     public function updateEntities(string $class, array $data, array $ids): void
     {

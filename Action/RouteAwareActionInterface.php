@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Action;
 
 /**
- * Common interface for actions with route management
+ * Common interface for actions with route management.
  *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
@@ -11,14 +13,9 @@ namespace Pim\Bundle\CustomEntityBundle\Action;
  */
 interface RouteAwareActionInterface extends ActionInterface
 {
-    /**
-     * @return string
-     */
     public function getRoute(): string;
 
     /**
-     * @param mixed
-     *
      * @return array
      */
     public function getRouteParameters($object = null);

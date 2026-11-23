@@ -14,25 +14,25 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ReferenceDataSpec extends ObjectBehavior
 {
-    function let(ConstraintCollectionProviderInterface $simpleProvider, Registry $registry)
+    public function let(ConstraintCollectionProviderInterface $simpleProvider, Registry $registry): void
     {
         $this->beConstructedWith($simpleProvider, $registry, ['a_job_name']);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ReferenceData::class);
     }
 
-    function it_is_a_constraint_collection_provider()
+    public function it_is_a_constraint_collection_provider(): void
     {
         $this->shouldImplement(ConstraintCollectionProviderInterface::class);
     }
 
-    function it_only_provides_constraints_for_supported_jobs(
+    public function it_only_provides_constraints_for_supported_jobs(
         JobInterface $supportedJob,
-        JobInterface $unsupportedJob
-    ) {
+        JobInterface $unsupportedJob,
+    ): void {
         $supportedJob->getName()->willReturn('a_job_name');
         $unsupportedJob->getName()->willReturn('another_job_name');
 
@@ -40,16 +40,17 @@ class ReferenceDataSpec extends ObjectBehavior
         $this->supports($unsupportedJob)->shouldReturn(false);
     }
 
-    function it_provides_a_constraint_collection(
+    public function it_provides_a_constraint_collection(
         $simpleProvider,
         $registry,
-        Collection $emptyCollection
-    ) {
+        Collection $emptyCollection,
+    ): void {
         $registry->getNames()->willReturn(['custom_entity_A', 'custom_entity_B']);
         $simpleProvider->getConstraintCollection()->willReturn($emptyCollection);
 
         $constraintCollection = $this->getConstraintCollection();
         $constraintCollection->shouldBeAnInstanceOf(Collection::class);
+
         $constraintFields = $constraintCollection->fields;
         $constraintFields->shouldHaveCount(1);
         $constraintFields->shouldHaveKey('reference_data_name');

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Pim\Bundle\CustomEntityBundle\Entity;
 
 use PhpSpec\ObjectBehavior;
-use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomOption;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomOptionTranslation;
 
 class CustomOptionTranslation extends AbstractCustomOptionTranslation
@@ -16,13 +17,13 @@ class CustomOptionTranslation extends AbstractCustomOptionTranslation
 
 class CustomOptionTranslationSpec extends ObjectBehavior
 {
-    function let()
+    public function let(): void
     {
         $this->beAnInstanceOf('spec\Pim\Bundle\CustomEntityBundle\Entity\CustomOptionTranslation');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
-        $this->shouldHaveType('Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomOptionTranslation');
+        $this->shouldHaveType(AbstractCustomOptionTranslation::class);
     }
 }

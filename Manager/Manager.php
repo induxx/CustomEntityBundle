@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Base implementation for ORM managers
+ * Base implementation for ORM managers.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -29,34 +29,20 @@ class Manager implements ManagerInterface
     /** @var RemoverInterface */
     protected $remover;
 
-    /** @var NormalizerInterface */
-    private $normalizer;
-
-    /**
-     * @param EntityManagerInterface $em
-     * @param ObjectUpdaterInterface $updater
-     * @param SaverInterface         $saver
-     * @param RemoverInterface       $remover
-     * @param NormalizerInterface    $normalizer
-     */
     public function __construct(
         EntityManagerInterface $em,
         ObjectUpdaterInterface $updater,
         SaverInterface $saver,
         RemoverInterface $remover,
-        NormalizerInterface $normalizer
+        private readonly NormalizerInterface $normalizer,
     ) {
         $this->em = $em;
         $this->updater = $updater;
         $this->saver = $saver;
         $this->remover = $remover;
-        $this->normalizer = $normalizer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function create($entityClass, array $defaultValues = [], array $options = [])
+    public function create($entityClass, array $defaultValues = [], array $options = []): object
     {
         $referenceData = new $entityClass();
         $this->updater->update($referenceData, $defaultValues);
@@ -64,49 +50,31 @@ class Manager implements ManagerInterface
         return $referenceData;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find($entityClass, $id, array $options = [])
     {
         return $this->em->getRepository($entityClass)->find($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findAll($entityClass) : array
+    public function findAll($entityClass): array
     {
         return $this->em->getRepository($entityClass)->findAll();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function update($entity, array $normalizedData): void
     {
         $this->updater->update($entity, $normalizedData);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($entity, ?array $options = []): void
     {
         $this->saver->save($entity, $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove($entity): void
     {
         $this->remover->remove($entity);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function normalize($entity, $format = null, array $context = []): array
     {
         return $this->normalizer->normalize($entity, $format, $context);

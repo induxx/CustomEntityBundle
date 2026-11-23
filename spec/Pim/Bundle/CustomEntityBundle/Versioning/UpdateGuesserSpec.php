@@ -10,17 +10,17 @@ use Akeneo\Tool\Bundle\VersioningBundle\UpdateGuesser\UpdateGuesserInterface;
 
 class UpdateGuesserSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(UpdateGuesser::class);
     }
 
-    function it_is_an_update_guesser()
+    public function it_is_an_update_guesser(): void
     {
         $this->shouldImplement(UpdateGuesserInterface::class);
     }
 
-    function it_only_supports_update_actions()
+    public function it_only_supports_update_actions(): void
     {
         $this->supportAction(UpdateGuesserInterface::ACTION_UPDATE_ENTITY)->shouldReturn(true);
         $this->supportAction(UpdateGuesserInterface::ACTION_DELETE)->shouldReturn(false);
@@ -28,7 +28,7 @@ class UpdateGuesserSpec extends ObjectBehavior
         $this->supportAction('any_other_action')->shouldReturn(false);
     }
 
-    function it_guesses_updates_for_versionable_entities(EntityManager $em, VersionableInterface $entity)
+    public function it_guesses_updates_for_versionable_entities(EntityManager $em, VersionableInterface $entity): void
     {
         $this->guessUpdates($em, $entity, UpdateGuesserInterface::ACTION_UPDATE_ENTITY)
              ->shouldReturn([$entity]);

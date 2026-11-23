@@ -2,9 +2,6 @@
 
 namespace spec\Pim\Bundle\CustomEntityBundle\Normalizer\Flat;
 
-use Acme\Bundle\CustomBundle\Entity\Color;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CustomEntityBundle\Metadata\ClassMetadataRegistry;
 use Pim\Bundle\CustomEntityBundle\Metadata\TargetEntityResolver;
@@ -16,36 +13,36 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ReferenceDataNormalizerSpec extends ObjectBehavior
 {
-    function let(
+    public function let(
         TargetEntityResolver $targetEntityResolver,
         ClassMetadataRegistry $classMetadataRegistry,
         PropertyAccessorInterface $propertyAccessor,
-        NormalizerInterface $transNormalizer
-    ) {
+        NormalizerInterface $transNormalizer,
+    ): void {
         $this->beConstructedWith($targetEntityResolver, $classMetadataRegistry, $propertyAccessor, $transNormalizer);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ReferenceDataNormalizer::class);
     }
 
-    function it_is_a_normalizer()
+    public function it_is_a_normalizer(): void
     {
         $this->shouldImplement(NormalizerInterface::class);
     }
 
-    function it_does_not_support_normalization_from_serializer()
+    public function it_does_not_support_normalization_from_serializer(): void
     {
         $this->supportsNormalization(Argument::any(), Argument::any())->shouldReturn(false);
     }
 
-    function it_sets_skipped_fields()
+    public function it_sets_skipped_fields(): void
     {
         $this->setSkippedFields(['id'])->shouldReturn(null);
     }
 
-    function it_normalizes_reference_data(\stdClass $object, $classMetadataRegistry, $propertyAccessor)
+    public function it_normalizes_reference_data(\stdClass $object, $classMetadataRegistry, $propertyAccessor): void
     {
         $classMetadataRegistry
             ->getReadableProperties($object)
@@ -56,7 +53,7 @@ class ReferenceDataNormalizerSpec extends ObjectBehavior
         $this->normalize($object, Argument::any())->shouldReturn(['id' => 1, 'code' => 'foo']);
     }
 
-    function it_does_not_normalize_skipped_fields(\stdClass $object, $classMetadataRegistry, $propertyAccessor)
+    public function it_does_not_normalize_skipped_fields(\stdClass $object, $classMetadataRegistry, $propertyAccessor): void
     {
         $classMetadataRegistry
             ->getReadableProperties($object)
@@ -67,14 +64,14 @@ class ReferenceDataNormalizerSpec extends ObjectBehavior
         $this->normalize($object, Argument::any())->shouldReturn(['id' => 1, 'code' => 'foo']);
     }
 
-    function it_normalizes_linked_reference_data(
+    public function it_normalizes_linked_reference_data(
         \stdClass $object,
         ReferenceDataInterface $referenceData,
         \ReflectionClass $reflectionClass,
         $classMetadataRegistry,
         $targetEntityResolver,
-        $propertyAccessor
-    ) {
+        $propertyAccessor,
+    ): void {
         $referenceData->getCode()->willReturn('bar');
 
         $classMetadataRegistry

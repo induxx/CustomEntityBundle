@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Action\Rest;
 
 use Pim\Bundle\CustomEntityBundle\Remover\NonRemovableEntityException;
@@ -14,24 +16,18 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DeleteAction extends AbstractRestAction
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function doExecute(Request $request): JsonResponse
     {
         $entity = $this->findEntity($request);
         try {
             $this->getManager()->remove($entity);
-        } catch (NonRemovableEntityException $e) {
-            return new JsonResponse($e->getMessage(), 412);
+        } catch (NonRemovableEntityException $nonRemovableEntityException) {
+            return new JsonResponse($nonRemovableEntityException->getMessage(), Response::HTTP_PRECONDITION_FAILED);
         }
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'rest_delete';

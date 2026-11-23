@@ -36,7 +36,7 @@ class CompilerPassTest extends TestCase
 
     public function testConfigurationBuilderMergesParentDefaults(): void
     {
-        $pass = new class extends ConfigurationBuilderPass {
+        $pass = new class () extends ConfigurationBuilderPass {
             public function merge(array $child, array $configurations): array
             {
                 return $this->getMergedConfiguration($child, $configurations);

@@ -21,16 +21,13 @@ abstract class AbstractTranslatableCustomEntity extends AbstractCustomEntity imp
     protected $locale;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
         $this->translations = new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addTranslation(TranslationInterface $translation): TranslatableInterface
     {
         if (!$this->translations->contains($translation)) {
@@ -40,15 +37,13 @@ abstract class AbstractTranslatableCustomEntity extends AbstractCustomEntity imp
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTranslation(?string $locale = null): ?AbstractTranslation
     {
-        $locale = ($locale) ? $locale : $this->locale;
+        $locale = $locale ?: $this->locale;
         if (!$locale) {
             return null;
         }
+
         foreach ($this->getTranslations() as $translation) {
             if ($translation->getLocale() == $locale) {
                 return $translation;
@@ -64,9 +59,6 @@ abstract class AbstractTranslatableCustomEntity extends AbstractCustomEntity imp
         return $translation;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale): TranslatableInterface
     {
         $this->locale = $locale;
@@ -74,9 +66,6 @@ abstract class AbstractTranslatableCustomEntity extends AbstractCustomEntity imp
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeTranslation(TranslationInterface $translation): TranslatableInterface
     {
         $this->translations->removeElement($translation);
@@ -92,15 +81,12 @@ abstract class AbstractTranslatableCustomEntity extends AbstractCustomEntity imp
         return $this->translations;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         $translation = $this->getTranslation();
 
-        return ($translation && (string)$translation)
-            ? (string)$translation
-            : (string)$this->code;
+        return ($translation instanceof AbstractTranslation && (string) $translation)
+            ? (string) $translation
+            : (string) $this->code;
     }
 }

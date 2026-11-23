@@ -10,7 +10,7 @@ use Pim\Bundle\CustomEntityBundle\Event\ConfigureActionEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Form listener for actions
+ * Form listener for actions.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2014 Akeneo SAS (http://www.akeneo.com)
@@ -18,43 +18,36 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FormConfigurationListener implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
             ConfigurationEvents::CONFIGURE => 'setConfigurationOptions',
-            ActionEvents::CONFIGURE        => 'setActionOptions'
+            ActionEvents::CONFIGURE        => 'setActionOptions',
         ];
     }
 
     /**
-     * Adds options to the actions
+     * Adds options to the actions.
      *
      * @param ConfigureEvent $event
      */
-    public function setConfigurationOptions(ConfigurationEvent $event)
+    public function setConfigurationOptions(ConfigurationEvent $event): void
     {
         $event->getOptionsResolver()->setDefined(
             [
                 'form_type',
                 'form_options',
-                'form_template'
+                'form_template',
             ]
         );
     }
 
     /**
-     * Adds options to the actions
-     *
-     * @param ConfigureActionEvent $event
-     *
-     * @return null
+     * Adds options to the actions.
      */
-    public function setActionOptions(ConfigureActionEvent $event)
+    public function setActionOptions(ConfigureActionEvent $event): void
     {
-        if (!($event->getAction() instanceof AbstractFormAction)) {
+        if (!$event->getAction() instanceof AbstractFormAction) {
             return;
         }
 
@@ -63,9 +56,11 @@ class FormConfigurationListener implements EventSubscriberInterface
         if (isset($confOptions['form_type'])) {
             $resolver->setDefaults(['form_type' => $confOptions['form_type']]);
         }
+
         if (isset($confOptions['form_options'])) {
             $resolver->setDefaults(['form_options' => $confOptions['form_options']]);
         }
+
         if (isset($confOptions['form_template'])) {
             $resolver->setDefaults(['template' => $confOptions['form_template']]);
         }

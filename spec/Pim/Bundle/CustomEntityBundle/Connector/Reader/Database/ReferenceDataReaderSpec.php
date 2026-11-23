@@ -14,46 +14,43 @@ use Akeneo\Tool\Component\Connector\Reader\Database\AbstractReader;
 
 class ReferenceDataReaderSpec extends ObjectBehavior
 {
-    function let(
+    public function let(
         Registry $confRegistry,
         EntityManagerInterface $em,
-        StepExecution $stepExecution
-    ) {
+        StepExecution $stepExecution,
+    ): void {
         $this->beConstructedWith($confRegistry, $em);
         $this->setStepExecution($stepExecution);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ReferenceDataReader::class);
     }
 
-    function it_is_an_abstract_reader()
+    public function it_is_an_abstract_reader(): void
     {
         $this->shouldBeAnInstanceOf(AbstractReader::class);
     }
 
-    function it_reads_reference_data_from_database(
+    public function it_reads_reference_data_from_database(
         $confRegistry,
         $em,
         $stepExecution,
         JobParameters $jobParameters,
         EntityRepository $repo,
-        ConfigurationInterface $config
-    ) {
-        $bar = function($id = null) {
-            return new class($id) {
-                private $id;
-                public function __construct($id)
-                {
-                    $this->id = $id;
-                }
-                public function getId()
-                {
-                    return $this->id;
-                }
-            };
-        };
+        ConfigurationInterface $config,
+    ): void {
+        $bar = (fn ($id = null): object => new class ($id) {
+            public function __construct(private $id)
+            {
+            }
+
+            public function getId()
+            {
+                return $this->id;
+            }
+        });
 
         $jobParameters->get('reference_data_name')->willReturn('some_custom_entity');
         $stepExecution->getJobParameters()->willReturn($jobParameters);
@@ -66,11 +63,11 @@ class ReferenceDataReaderSpec extends ObjectBehavior
         $stepExecution->incrementSummaryInfo('read')->shouldBeCalledTimes(2);
 
         $result = $this->read();
-        $result->shouldHaveType(get_class($bar()));
+        $result->shouldHaveType($bar()::class);
         $result->getid()->shouldReturn(42);
 
         $result = $this->read();
-        $result->shouldHaveType(get_class($bar()));
+        $result->shouldHaveType($bar()::class);
         $result->getid()->shouldReturn(56);
 
         $this->read()->shouldReturn(null);

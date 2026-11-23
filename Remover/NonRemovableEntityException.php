@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Remover;
 
 /**
- * Exception thrown when an entity cannot be removed
+ * Exception thrown when an entity cannot be removed.
  *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)

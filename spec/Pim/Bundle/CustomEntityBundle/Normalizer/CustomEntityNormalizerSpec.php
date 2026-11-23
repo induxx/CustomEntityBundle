@@ -18,25 +18,25 @@ class CustomEntityNormalizerSpec extends ObjectBehavior
         NormalizerInterface $pimSerializer,
         VersionManager $versionManager,
         NormalizerInterface $versionNormalizer,
-        StructureVersion $structureVersionProvider
-    ) {
+        StructureVersion $structureVersionProvider,
+    ): void {
         $this->beConstructedWith($pimSerializer, $versionManager, $versionNormalizer, $structureVersionProvider);
     }
 
-    public function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(CustomEntityNormalizer::class);
         $this->shouldImplement(NormalizerInterface::class);
     }
 
-    public function it_supports_only_internal_format(AbstractCustomEntity $entity)
+    public function it_supports_only_internal_format(AbstractCustomEntity $entity): void
     {
         $this->supportsNormalization($entity, 'internal_api')->shouldReturn(true);
         $this->supportsNormalization($entity, 'external_api')->shouldReturn(false);
         $this->supportsNormalization($entity, 'standard')->shouldReturn(false);
     }
 
-    public function it_normalizes_objects(NormalizerInterface $pimSerializer, AbstractCustomEntity $entity)
+    public function it_normalizes_objects(NormalizerInterface $pimSerializer, AbstractCustomEntity $entity): void
     {
         $entity->getId()->willReturn(666);
 
@@ -71,15 +71,15 @@ class CustomEntityNormalizerSpec extends ObjectBehavior
         $this->normalize($entity, 'standard', $context)->shouldReturn($expected);
     }
 
-    function it_normalizes_versionable_custom_entities(
+    public function it_normalizes_versionable_custom_entities(
         $pimSerializer,
         $versionManager,
         $versionNormalizer,
         $structureVersionProvider,
         FooEntity $entity,
         VersionInterface $oldestLogEntry,
-        VersionInterface $newestLogEntry
-    ) {
+        VersionInterface $newestLogEntry,
+    ): void {
         $context = [
             'customEntityName' => 'fooEntity',
             'form'             => 'foo_form_extension',

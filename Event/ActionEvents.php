@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Event;
 
 /**
- * Contains the name of all action events
+ * Contains the name of all action events.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -12,22 +14,22 @@ namespace Pim\Bundle\CustomEntityBundle\Event;
 class ActionEvents
 {
     /**
-     * Launched at action configuration
+     * Launched at action configuration.
      */
-    const CONFIGURE = 'pim_custom_entity.action.configure';
+    public const CONFIGURE = 'pim_custom_entity.action.configure';
 
     /**
-     * Launched before action execution
+     * Launched before action execution.
      */
-    const PRE_EXECUTE = 'pim_custom_entity.action.pre_execute';
+    public const PRE_EXECUTE = 'pim_custom_entity.action.pre_execute';
 
     /**
-     * Launched at action configuration
+     * Launched at action configuration.
      */
-    const PRE_RENDER = 'pim_custom_entity.action.pre_render';
+    public const PRE_RENDER = 'pim_custom_entity.action.pre_render';
 
     /**
-     * Launched after action execution
+     * Launched after action execution.
      */
-    const POST_EXECUTE = 'pim_custom_entity.action.post_execute';
+    public const POST_EXECUTE = 'pim_custom_entity.action.post_execute';
 }

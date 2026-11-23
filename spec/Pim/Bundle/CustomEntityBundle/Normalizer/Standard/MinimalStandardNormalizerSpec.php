@@ -9,13 +9,13 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class MinimalStandardNormalizerSpec extends ObjectBehavior
 {
-    public function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(MinimalStandardNormalizer::class);
         $this->shouldImplement(NormalizerInterface::class);
     }
 
-    public function it_normalizes_objects(AbstractCustomEntity $entity)
+    public function it_normalizes_objects(AbstractCustomEntity $entity): void
     {
         $entity->getId()->willReturn(666);
         $entity->getCode()->willReturn('foobar');
@@ -28,7 +28,7 @@ class MinimalStandardNormalizerSpec extends ObjectBehavior
         $this->normalize($entity)->shouldReturn($expected);
     }
 
-    public function it_supports_only_internal_format(AbstractCustomEntity $entity)
+    public function it_supports_only_internal_format(AbstractCustomEntity $entity): void
     {
         $this->supportsNormalization($entity, 'internal_api')->shouldReturn(false);
         $this->supportsNormalization($entity, 'external_api')->shouldReturn(false);

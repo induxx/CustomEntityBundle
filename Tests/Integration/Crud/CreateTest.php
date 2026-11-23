@@ -14,7 +14,7 @@ use Acme\Bundle\CustomBundle\Entity\Pictogram;
  */
 class CreateTest extends AbstractCrudTestCase
 {
-    public function testCreateSimpleReferenceData()
+    public function testCreateSimpleReferenceData(): void
     {
         $entityName = Color::class;
         $data = [
@@ -26,7 +26,7 @@ class CreateTest extends AbstractCrudTestCase
             'blue' => 255,
         ];
 
-        $color = $this->createReferenceData($entityName, $data);
+        $this->createReferenceData($entityName, $data);
 
         $colors = $this->manager->findAll($entityName);
         $this->assertCount(1, $colors);
@@ -40,7 +40,7 @@ class CreateTest extends AbstractCrudTestCase
         $this->assertEquals($data['blue'], $dbColor->getBlue());
     }
 
-    public function testCreateTranslatableReferenceData()
+    public function testCreateTranslatableReferenceData(): void
     {
         $entityName = Pictogram::class;
         $data = [
@@ -49,7 +49,7 @@ class CreateTest extends AbstractCrudTestCase
                 'en_US' => 'An english label',
                 'fr_FR' => 'Un label français',
                 'de_DE' => 'Ein deutsches Label',
-            ]
+            ],
         ];
 
         $this->activateLocales('fr_FR', 'de_DE');
@@ -67,9 +67,9 @@ class CreateTest extends AbstractCrudTestCase
         }
     }
 
-    public function testCreateLinkedReferenceData()
+    public function testCreateLinkedReferenceData(): void
     {
-        $fabric = $this->createReferenceData(Fabric::class, [
+        $this->createReferenceData(Fabric::class, [
             'code' => 'my_fabric',
             'name' => 'My fabric',
             'alternative_name' => 'An alternative name for my fabric',
@@ -80,7 +80,7 @@ class CreateTest extends AbstractCrudTestCase
             'code'   => 'my_brand',
         ];
 
-        $brand = $this->createReferenceData($entityName, $data);
+        $this->createReferenceData($entityName, $data);
 
         $brands = $this->manager->findAll($entityName);
         $this->assertCount(1, $brands);

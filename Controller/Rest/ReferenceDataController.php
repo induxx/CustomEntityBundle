@@ -15,54 +15,17 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * mimicks the API interfaces and responses of reference-entities
+ * mimicks the API interfaces and responses of reference-entities.
  */
 class ReferenceDataController
 {
     /** @var ApiResourceRepositoryInterface */
     private $repository;
 
-    /** @var NormalizerInterface */
-    private $normalizer;
-
-    /** @var PaginatorInterface */
-    private $paginator;
-
-    /** @var ParameterValidatorInterface */
-    private $parameterValidator;
-
-    /** @var array */
-    private $apiConfiguration;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /** @var array */
-    private $referenceEntityCodes;
-
-    public function __construct(
-        NormalizerInterface $normalizer,
-        PaginatorInterface $paginator,
-        ParameterValidatorInterface $parameterValidator,
-        EntityManager $entityManager,
-        array $apiConfiguration,
-        array $referenceEntityCodes
-    ) {
-        $this->normalizer = $normalizer;
-        $this->paginator = $paginator;
-        $this->parameterValidator = $parameterValidator;
-        $this->apiConfiguration = $apiConfiguration;
-        $this->entityManager = $entityManager;
-        $this->referenceEntityCodes = $referenceEntityCodes;
+    public function __construct(private readonly NormalizerInterface $normalizer, private readonly PaginatorInterface $paginator, private readonly ParameterValidatorInterface $parameterValidator, private readonly EntityManager $entityManager, private array $apiConfiguration, private array $referenceEntityCodes)
+    {
     }
 
-    /**
-     * @param Request $request
-     * @param string $referenceCode
-     * @param string $code
-     *
-     * @return JsonResponse
-     */
     public function getAction(Request $request, string $referenceCode, string $code): JsonResponse
     {
         $referenceEntityClass = $this->getEntityClass($referenceCode);
@@ -82,12 +45,6 @@ class ReferenceDataController
         return new JsonResponse($normalisedReferenceEntity);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @param string $referenceCode
-     * @return JsonResponse
-     */
     public function listAction(Request $request, string $referenceCode): JsonResponse
     {
         $referenceEntityClass = $this->getEntityClass($referenceCode);
@@ -99,8 +56,8 @@ class ReferenceDataController
 
         try {
             $this->parameterValidator->validate($request->query->all());
-        } catch (PaginationParametersException $e) {
-            throw new UnprocessableEntityHttpException($e->getMessage(), $e);
+        } catch (PaginationParametersException $paginationParametersException) {
+            throw new UnprocessableEntityHttpException($paginationParametersException->getMessage(), $paginationParametersException);
         }
 
         $defaultParameters = [
@@ -141,8 +98,6 @@ class ReferenceDataController
      * @param string $content content of a request to decode
      *
      * @throws BadRequestHttpException
-     *
-     * @return array
      */
     protected function getDecodedContent($content): array
     {
@@ -155,10 +110,6 @@ class ReferenceDataController
         return $decodedContent;
     }
 
-    /**
-     * @param string $referenceEntityCode
-     * @return string
-     */
     private function getEntityClass(string $referenceEntityCode): ?string
     {
         return $this->referenceEntityCodes[$referenceEntityCode] ?? null;

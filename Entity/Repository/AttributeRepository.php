@@ -3,12 +3,11 @@
 namespace Pim\Bundle\CustomEntityBundle\Entity\Repository;
 
 use Akeneo\Pim\Structure\Component\AttributeTypes;
-use Akeneo\Pim\Structure\Component\Model\Attribute;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Repository for attribute entity
+ * Repository for attribute entity.
  *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
@@ -17,7 +16,6 @@ use Doctrine\ORM\EntityRepository;
 class AttributeRepository extends EntityRepository
 {
     /**
-     * @param EntityManagerInterface $em
      * @param string $attributeClass
      */
     public function __construct(EntityManagerInterface $em, $attributeClass)

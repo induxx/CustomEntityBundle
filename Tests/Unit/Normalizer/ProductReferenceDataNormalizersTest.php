@@ -16,10 +16,13 @@ class ProductReferenceDataNormalizersTest extends TestCase
 {
     public function testReferenceDataValueNormalizesCodeFallbackAndContext(): void
     {
-        $attribute = new class {
-            public function getReferenceDataName(): string { return 'colors'; }
+        $attribute = new class () {
+            public function getReferenceDataName(): string
+            {
+                return 'colors';
+            }
         };
-        $reference = (new class extends AbstractReferenceData {})->setCode('red');
+        $reference = (new class () extends AbstractReferenceData {})->setCode('red');
         $attributeRepository = $this->createMock(IdentifiableObjectRepositoryInterface::class);
         $attributeRepository->method('findOneByIdentifier')->with('color')->willReturn($attribute);
         $repository = $this->createMock(ObjectRepository::class);
@@ -38,11 +41,14 @@ class ProductReferenceDataNormalizersTest extends TestCase
 
     public function testReferenceDataCollectionNormalizesAndSortsResolvedLabels(): void
     {
-        $attribute = new class {
-            public function getReferenceDataName(): string { return 'colors'; }
+        $attribute = new class () {
+            public function getReferenceDataName(): string
+            {
+                return 'colors';
+            }
         };
-        $red = (new class extends AbstractReferenceData {})->setCode('red');
-        $blue = (new class extends AbstractReferenceData {})->setCode('blue');
+        $red = (new class () extends AbstractReferenceData {})->setCode('red');
+        $blue = (new class () extends AbstractReferenceData {})->setCode('blue');
         $attributeRepository = $this->createMock(IdentifiableObjectRepositoryInterface::class);
         $attributeRepository->method('findOneByIdentifier')->willReturn($attribute);
         $repository = $this->createMock(ObjectRepository::class);

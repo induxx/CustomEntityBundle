@@ -13,7 +13,7 @@ use Pim\Bundle\CustomEntityBundle\Tests\AbstractTestCase;
  */
 class VersionableCustomEntityTest extends AbstractTestCase
 {
-    public function testUpdateVersionableEntity()
+    public function testUpdateVersionableEntity(): void
     {
         /** @var VersionRepositoryInterface $versionRepository */
         $versionRepository = $this->get('pim_versioning.repository.version');
@@ -37,12 +37,10 @@ class VersionableCustomEntityTest extends AbstractTestCase
         $this->assertCount(1, $versions);
         $this->assertEquals(1, $versions[0]->getVersion());
         $this->assertEquals($data, $versions[0]->getSnapshot());
-        $expectedChangeset = array_map(function ($value) {
-            return [
-                'old' => '',
-                'new' => $value,
-            ];
-        }, $data);
+        $expectedChangeset = array_map(fn ($value): array => [
+            'old' => '',
+            'new' => $value,
+        ], $data);
         $this->assertEquals($expectedChangeset, $versions[0]->getChangeset());
         $this->assertFalse($versions[0]->isPending());
 
@@ -71,7 +69,7 @@ class VersionableCustomEntityTest extends AbstractTestCase
         $this->assertFalse($newest->isPending());
     }
 
-    public function testDeleteVersionableEntity()
+    public function testDeleteVersionableEntity(): void
     {
         /** @var VersionRepositoryInterface $versionRepository */
         $versionRepository = $this->get('pim_versioning.repository.version');
@@ -89,6 +87,7 @@ class VersionableCustomEntityTest extends AbstractTestCase
             $data
         );
         $blue = $this->manager->find(Color::class, $blue->getId());
+
         $resourceId = $blue->getId();
         $data['id'] = $resourceId;
 

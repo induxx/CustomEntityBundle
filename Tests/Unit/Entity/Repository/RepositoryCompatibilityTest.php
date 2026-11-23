@@ -20,9 +20,7 @@ class RepositoryCompatibilityTest extends TestCase
 
     private function getDeclaredMethods(string $class): array
     {
-        return array_filter((new \ReflectionClass($class))->getMethods(), static function (\ReflectionMethod $method) use ($class): bool {
-            return $method->getDeclaringClass()->getName() === $class;
-        });
+        return array_filter((new \ReflectionClass($class))->getMethods(), static fn (\ReflectionMethod $method): bool => $method->getDeclaringClass()->getName() === $class);
     }
 
     public function testFindByIdsRejectsEmptyIdsBeforeAccessingPersistence(): void

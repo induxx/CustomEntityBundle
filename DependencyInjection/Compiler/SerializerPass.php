@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Duplicates the pim serializer
+ * Duplicates the pim serializer.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  */
@@ -16,49 +16,43 @@ class SerializerPass implements CompilerPassInterface
     /**
      * @staticvar string
      */
-    const TAG_NAME = 'pim_serializer';
+    public const TAG_NAME = 'pim_serializer';
 
     /**
      * @staticvar integer The default priority for services
      */
-    const DEFAULT_PRIORITY = 100;
+    public const DEFAULT_PRIORITY = 100;
 
     /**
      * @var string
      */
     protected $tagPrefix;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         foreach ($container->findTaggedServiceIds(static::TAG_NAME) as $serviceId => $tags) {
             $serializerTags = [];
             foreach ($tags as $tag) {
-                $serializerTags[] = isset($tag['alias']) ? $tag['alias'] : $serviceId;
+                $serializerTags[] = $tag['alias'] ?? $serviceId;
             }
+
             $this->processService($container, $serviceId, $serializerTags);
         }
     }
 
     /**
-     * process a serializer service
+     * process a serializer service.
      *
-     * @param ContainerBuilder $container
-     * @param string           $serviceId
-     * @param array            $tags
+     * @param string $serviceId
      */
-    public function processService(ContainerBuilder $container, $serviceId, array $tags)
+    public function processService(ContainerBuilder $container, $serviceId, array $tags): void
     {
         $tagArguments = [];
         // Looks for all the services tagged "serializer.normalizer" and adds them to the Serializer service
         $tagArguments[0] = $this->findAndSortTaggedServices(
             $container,
             array_map(
-                function ($tag) {
-                    return sprintf("%s.normalizer", $tag);
-                },
+                fn ($tag): string => sprintf('%s.normalizer', $tag),
                 $tags
             )
         );
@@ -67,9 +61,7 @@ class SerializerPass implements CompilerPassInterface
         $tagArguments[1] = $this->findAndSortTaggedServices(
             $container,
             array_map(
-                function ($tag) {
-                    return sprintf("%s.encoder", $tag);
-                },
+                fn ($tag): string => sprintf('%s.encoder', $tag),
                 $tags
             )
         );
@@ -88,21 +80,20 @@ class SerializerPass implements CompilerPassInterface
     }
 
     /**
-     * Returns an array of service references for a specified tag name
+     * Returns an array of service references for a specified tag name.
      *
-     * @param ContainerBuilder $container
-     * @param array            $tagNames
+     * @param array $tagNames
      *
      * @return Reference[]
      */
-    protected function findAndSortTaggedServices(ContainerBuilder $container, $tagNames)
+    protected function findAndSortTaggedServices(ContainerBuilder $container, $tagNames): mixed
     {
         $sortedServices = [];
         foreach ($tagNames as $tagName) {
             $services = $container->findTaggedServiceIds($tagName);
             foreach ($services as $serviceId => $tags) {
                 foreach ($tags as $tag) {
-                    $priority = isset($tag['priority']) ? $tag['priority'] : self::DEFAULT_PRIORITY;
+                    $priority = $tag['priority'] ?? self::DEFAULT_PRIORITY;
                     $sortedServices[$priority][] = new Reference($serviceId);
                 }
             }
@@ -111,6 +102,6 @@ class SerializerPass implements CompilerPassInterface
         krsort($sortedServices);
 
         // Flatten the array
-        return call_user_func_array('array_merge', $sortedServices);
+        return array_merge(...$sortedServices);
     }
 }

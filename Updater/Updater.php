@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\CustomEntityBundle\Updater;
 
+use Akeneo\Tool\Component\FileStorage\Model\FileInfoInterface;
 use Akeneo\Channel\Infrastructure\Component\Repository\LocaleRepositoryInterface;
 use Akeneo\Pim\Enrichment\Component\FileStorage;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ReferenceDataInterface;
@@ -16,7 +17,7 @@ use Pim\Bundle\CustomEntityBundle\Entity\AbstractTranslatableCustomEntity;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
- * Reference data updater
+ * Reference data updater.
  *
  * @author    Romain Monceau <romain@akeneo.com>
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
@@ -39,17 +40,11 @@ class Updater implements ObjectUpdaterInterface
     /** @var FileStorerInterface */
     protected $storer;
 
-    /**
-     * @param PropertyAccessorInterface $propertyAccessor
-     * @param LocaleRepositoryInterface $localeRepository
-     * @param EntityManagerInterface    $em
-     * @param FileStorerInterface       $storer
-     */
     public function __construct(
         PropertyAccessorInterface $propertyAccessor,
         LocaleRepositoryInterface $localeRepository,
         EntityManagerInterface $em,
-        FileStorerInterface $storer
+        FileStorerInterface $storer,
     ) {
         $this->propertyAccessor = $propertyAccessor;
         $this->localeRepository = $localeRepository;
@@ -57,16 +52,13 @@ class Updater implements ObjectUpdaterInterface
         $this->storer = $storer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function update($referenceData, array $data, array $options = []): ReferenceDataInterface
     {
         if (!$referenceData instanceof ReferenceDataInterface) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Expects a "%s", "%s" provided',
-                    'Akeneo\Pim\Enrichment\Component\Product\Model\ReferenceDataInterface',
+                    ReferenceDataInterface::class,
                     ClassUtils::getClass($referenceData)
                 )
             );
@@ -80,9 +72,7 @@ class Updater implements ObjectUpdaterInterface
     }
 
     /**
-     * @param ReferenceDataInterface $referenceData
-     * @param string                 $propertyPath
-     * @param mixed                  $value
+     * @param string $propertyPath
      */
     protected function updateProperty(ReferenceDataInterface $referenceData, $propertyPath, $value): void
     {
@@ -102,6 +92,7 @@ class Updater implements ObjectUpdaterInterface
 
             return;
         }
+
         if ($this->isAssociation($referenceData, $propertyPath)) {
             $this->updateAssociatedEntity($referenceData, $propertyPath, $value);
         } else {
@@ -110,11 +101,9 @@ class Updater implements ObjectUpdaterInterface
     }
 
     /**
-     * Updates an entity linked to the reference data
+     * Updates an entity linked to the reference data.
      *
-     * @param ReferenceDataInterface $referenceData
-     * @param string                 $propertyPath
-     * @param mixed                  $value
+     * @param string $propertyPath
      *
      * @throws EntityNotFoundException
      */
@@ -132,7 +121,7 @@ class Updater implements ObjectUpdaterInterface
 
         if (is_subclass_of(
             $associationMapping['targetEntity'],
-            'Akeneo\Tool\Component\FileStorage\Model\FileInfoInterface'
+            FileInfoInterface::class
         )) {
             if (empty($value['filePath'])) {
                 $this->propertyAccessor->setValue($referenceData, $propertyPath, null);
@@ -162,6 +151,7 @@ class Updater implements ObjectUpdaterInterface
             if (is_string($value)) {
                 $value = array_filter(explode(',', $value));
             }
+
             foreach ($value as $entityCode) {
                 $associatedEntity[] = $associationRepo->findOneBy(['code' => $entityCode]);
             }
@@ -183,11 +173,9 @@ class Updater implements ObjectUpdaterInterface
     }
 
     /**
-     * Updates a reference data translation from the translatable reference data
+     * Updates a reference data translation from the translatable reference data.
      *
-     * @param AbstractTranslatableCustomEntity $referenceData
-     * @param string                           $propertyPath
-     * @param mixed                            $values
+     * @param string $propertyPath
      *
      * @throws \InvalidArgumentException
      */
@@ -199,41 +187,27 @@ class Updater implements ObjectUpdaterInterface
                     sprintf('Locale "%s" is not activated', $locale)
                 );
             }
+
             $translation = $referenceData->getTranslation($locale);
             $translation->setLabel($value);
         }
     }
 
-    /**
-     * @param ReferenceDataInterface $referenceData
-     *
-     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata|ClassMetadataInfo
-     */
     protected function getClassMetadata(ReferenceDataInterface $referenceData): ClassMetadataInfo
     {
         $entityName = ClassUtils::getClass($referenceData);
-        if (!isset($this->classMetadata[$entityName])) {
-            $this->classMetadata[$entityName] = $this->em->getClassMetadata($entityName);
-        }
+        $this->classMetadata[$entityName] ??= $this->em->getClassMetadata($entityName);
 
         return $this->classMetadata[$entityName];
     }
 
-    /**
-     * @param ReferenceDataInterface $referenceData
-     *
-     * @return array
-     */
     protected function getAssociationMappings(ReferenceDataInterface $referenceData): array
     {
         return $this->getClassMetadata($referenceData)->getAssociationMappings();
     }
 
     /**
-     * @param ReferenceDataInterface $referenceData
-     * @param string                 $property
-     *
-     * @return bool
+     * @param string $property
      */
     protected function isAssociation(ReferenceDataInterface $referenceData, $property): bool
     {
@@ -243,10 +217,7 @@ class Updater implements ObjectUpdaterInterface
     }
 
     /**
-     * @param ReferenceDataInterface $referenceData
-     * @param string                 $property
-     *
-     * @return array
+     * @param string $property
      */
     protected function getAssociationMapping(ReferenceDataInterface $referenceData, $property): array
     {

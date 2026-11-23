@@ -47,24 +47,16 @@ abstract class AbstractRestAction implements ActionInterface
      */
     protected $options;
 
-    /**
-     * @param ActionFactory      $actionFactory
-     * @param ActionEventManager $eventManager
-     * @param ManagerRegistry    $managerRegistry
-     */
     public function __construct(
         ActionFactory $actionFactory,
         ActionEventManager $eventManager,
-        ManagerRegistry $managerRegistry
+        ManagerRegistry $managerRegistry,
     ) {
         $this->actionFactory = $actionFactory;
         $this->eventManager = $eventManager;
         $this->managerRegistry = $managerRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setConfiguration(ConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;
@@ -74,18 +66,11 @@ abstract class AbstractRestAction implements ActionInterface
         $this->options = $resolver->resolve($configuration->getActionOptions($this->getType()));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration(): ConfigurationInterface
     {
         return $this->configuration;
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     public function getOptions(): array
     {
         return $this->options;
@@ -94,23 +79,18 @@ abstract class AbstractRestAction implements ActionInterface
     /**
      * @param string $optionKey
      *
-     * @return mixed
      * @throws \LogicException
      */
     protected function getOption($optionKey)
     {
         if (isset($this->options[$optionKey])) {
             return $this->options[$optionKey];
-        } else {
-            throw new \LogicException(
-                sprintf('Option "%s" is not defined', $optionKey)
-            );
         }
+        throw new \LogicException(
+            sprintf('Option "%s" is not defined', $optionKey)
+        );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(Request $request): Response
     {
         $this->eventManager->dispatchPreExecuteEvent($this);
@@ -120,11 +100,7 @@ abstract class AbstractRestAction implements ActionInterface
     }
 
     /**
-     * Returns the entity of the request
-     *
-     * @param Request $request
-     *
-     * @return AbstractCustomEntity
+     * Returns the entity of the request.
      *
      * @throws NotFoundHttpException
      */
@@ -144,11 +120,7 @@ abstract class AbstractRestAction implements ActionInterface
     }
 
     /**
-     * Normalizes an entity into the internal array format
-     *
-     * @param AbstractCustomEntity $entity
-     *
-     * @return array
+     * Normalizes an entity into the internal array format.
      */
     protected function normalize(AbstractCustomEntity $entity): array
     {
@@ -160,26 +132,19 @@ abstract class AbstractRestAction implements ActionInterface
             'form'             => $editFormExtension,
         ];
 
-        $normalized = $manager->normalize($entity, 'internal_api', $context);
-
-        return $normalized;
+        return $manager->normalize($entity, 'internal_api', $context);
     }
 
     /**
-     * Returns the custom entity manager
-     *
-     * @return ManagerInterface
+     * Returns the custom entity manager.
      */
     protected function getManager(): ManagerInterface
     {
         return $this->managerRegistry->getFromConfiguration($this->configuration);
     }
 
-
     /**
-     * Set the default options
-     *
-     * @param OptionsResolver $resolver
+     * Set the default options.
      */
     protected function setDefaultOptions(OptionsResolver $resolver): void
     {
@@ -187,11 +152,7 @@ abstract class AbstractRestAction implements ActionInterface
     }
 
     /**
-     * Executes the action
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
+     * Executes the action.
      */
     abstract protected function doExecute(Request $request): JsonResponse;
 }

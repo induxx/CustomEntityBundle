@@ -10,7 +10,7 @@ class TestKernel extends Kernel
             yield $bundle;
         }
 
-        foreach (require __DIR__ . '/bundles.php' as $class => $environments) {
+        foreach (require __DIR__.'/bundles.php' as $class => $environments) {
             if (!isset($registered[$class]) && ($environments[$this->environment] ?? $environments['all'] ?? false)) {
                 yield new $class();
             }

@@ -13,10 +13,11 @@ use Symfony\Component\Finder\Finder;
  */
 class AbstractJobTestCase extends AbstractTestCase
 {
-    const DATA_FILE_PATH = __DIR__ . '/../../Resources/data/';
-    const EXPORT_PATH = '/tmp/test/export/';
+    public const DATA_FILE_PATH = __DIR__.'/../../Resources/data/';
 
-    public function setUp(): void
+    public const EXPORT_PATH = '/tmp/test/export/';
+
+    protected function setUp(): void
     {
         parent::setUp();
         if (!file_exists(static::EXPORT_PATH)) {
@@ -24,7 +25,7 @@ class AbstractJobTestCase extends AbstractTestCase
         }
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $finder = new Finder();
         foreach ($finder->files()->in(static::EXPORT_PATH) as $file) {
@@ -52,14 +53,13 @@ class AbstractJobTestCase extends AbstractTestCase
         if (null !== $filepath) {
             $config['filePath'] = $filepath;
         }
+
         $job->setRawParameters($config);
 
         $this->get('akeneo_batch.saver.job_instance')->save($job);
     }
 
     /**
-     * @param string $jobCode
-     *
      * @return string
      */
     protected function launchExport(string $jobCode)
@@ -68,9 +68,6 @@ class AbstractJobTestCase extends AbstractTestCase
     }
 
     /**
-     * @param string $jobCode
-     * @param string $content
-     *
      * @return string
      */
     protected function launchImport(string $jobCode, string $content = '')

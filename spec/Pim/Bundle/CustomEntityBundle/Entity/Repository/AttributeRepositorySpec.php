@@ -14,19 +14,19 @@ use Pim\Bundle\CustomEntityBundle\Entity\Repository\AttributeRepository;
  */
 class AttributeRepositorySpec extends ObjectBehavior
 {
-    function let(EntityManagerInterface $em, ClassMetadata $classMetadata)
+    public function let(EntityManagerInterface $em, ClassMetadata $classMetadata): void
     {
         $em->getClassMetadata('foo')->willReturn($classMetadata);
 
         $this->beConstructedWith($em, 'foo');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(AttributeRepository::class);
     }
 
-    function it_is_an_entity_repository()
+    public function it_is_an_entity_repository(): void
     {
         $this->shouldHaveType(EntityRepository::class);
     }

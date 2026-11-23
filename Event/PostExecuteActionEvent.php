@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Event;
 
 use Pim\Bundle\CustomEntityBundle\Action\ActionInterface;
@@ -17,10 +19,6 @@ class PostExecuteActionEvent extends ActionEvent
      */
     protected $response;
 
-    /**
-     * @param ActionInterface $action
-     * @param Response        $response
-     */
     public function __construct(ActionInterface $action, Response $response)
     {
         parent::__construct($action);
@@ -29,7 +27,7 @@ class PostExecuteActionEvent extends ActionEvent
     }
 
     /**
-     * Returns the response created by the action
+     * Returns the response created by the action.
      *
      * @return Response
      */
@@ -39,11 +37,9 @@ class PostExecuteActionEvent extends ActionEvent
     }
 
     /**
-     * Changes the response returned by the action
-     *
-     * @param Response $response
+     * Changes the response returned by the action.
      */
-    public function setResponse(Response $response)
+    public function setResponse(Response $response): void
     {
         $this->response = $response;
     }

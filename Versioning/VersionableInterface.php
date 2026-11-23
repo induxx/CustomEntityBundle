@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Versioning;
 
 use Akeneo\Tool\Component\Versioning\Model\VersionableInterface as PimVersionableInterface;
 
 /**
- * Implement this interface for versionable custom entities
+ * Implement this interface for versionable custom entities.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2014 Akeneo SAS (http://www.akeneo.com)

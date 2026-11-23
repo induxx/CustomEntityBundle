@@ -7,6 +7,7 @@ use Webmozart\Assert\Assert;
 trait DefaultLocalizableLabelsTrait
 {
     private ?string $label = null;
+
     private ?array $labels = null;
 
     public function setLabels(array $labels): void
@@ -16,7 +17,7 @@ trait DefaultLocalizableLabelsTrait
         }
     }
 
-    public function setLabel(string $locale, string $content = null): void
+    public function setLabel(string $locale, ?string $content = null): void
     {
         $this->pop();
         Assert::stringNotEmpty($locale);
@@ -28,13 +29,14 @@ trait DefaultLocalizableLabelsTrait
 
         if (empty($content)) {
             unset($labels[$locale]);
+
             return;
         }
 
         $this->labels[$locale] = $content;
     }
 
-    public function getLabel(string $locale):? string
+    public function getLabel(string $locale): ?string
     {
         return $this->labels[$locale] ?? null;
     }
@@ -46,7 +48,7 @@ trait DefaultLocalizableLabelsTrait
 
     private function unpop(): void
     {
-        if ($this->labels === null) {
+        if (null === $this->labels) {
             $this->labels = [];
 
             if (is_string($this->label)) {

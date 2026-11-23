@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Event;
 
 use Pim\Bundle\CustomEntityBundle\Configuration\ConfigurationInterface;
@@ -7,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Launched upon custom entity options configuration
+ * Launched upon custom entity options configuration.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2014 Akeneo SAS (http://www.akeneo.com)
@@ -26,10 +28,7 @@ class ConfigurationEvent extends Event
     protected $optionsResolver;
 
     /**
-     * Constructor
-     *
-     * @param ConfigurationInterface $configuration
-     * @param OptionsResolver        $optionsResolver
+     * Constructor.
      */
     public function __construct(ConfigurationInterface $configuration, OptionsResolver $optionsResolver)
     {
@@ -38,7 +37,7 @@ class ConfigurationEvent extends Event
     }
 
     /**
-     * Returns the configuration
+     * Returns the configuration.
      *
      * @return ConfigurationInterface
      */
@@ -48,7 +47,7 @@ class ConfigurationEvent extends Event
     }
 
     /**
-     * Returns the options resolver
+     * Returns the options resolver.
      *
      * @return OptionsResolver
      */

@@ -17,7 +17,7 @@ class PimCustomEntityBundleTest extends TestCase
         (new PimCustomEntityBundle())->build($container);
 
         $passes = $container->getCompilerPassConfig()->getPasses();
-        $classes = array_map(static fn ($pass) => get_class($pass), $passes);
+        $classes = array_map(get_class(...), $passes);
         self::assertContains(ConfigurationBuilderPass::class, $classes);
         self::assertContains(SerializerPass::class, $classes);
         self::assertContains(ManagerRegistryPass::class, $classes);

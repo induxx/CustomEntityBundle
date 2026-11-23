@@ -16,31 +16,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractRestApiAction
 {
-    protected ActionFactory $actionFactory;
-
-    protected ActionEventManager $eventManager;
-
-    protected ManagerRegistry $managerRegistry;
-
     protected ConfigurationInterface $configuration;
 
     protected array $options;
 
-    private array $referenceEntityCodes;
-    private array $referenceEntityNames;
-
-    public function __construct(
-        ActionFactory      $actionFactory,
-        ActionEventManager $eventManager,
-        ManagerRegistry    $managerRegistry,
-        array              $referenceEntityCodes,
-        array              $referenceEntityNames,
-    ) {
-        $this->actionFactory = $actionFactory;
-        $this->eventManager = $eventManager;
-        $this->managerRegistry = $managerRegistry;
-        $this->referenceEntityCodes = $referenceEntityCodes;
-        $this->referenceEntityNames = $referenceEntityNames;
+    public function __construct(protected ActionFactory $actionFactory, protected ActionEventManager $eventManager, protected ManagerRegistry $managerRegistry, private array $referenceEntityCodes, private array $referenceEntityNames)
+    {
     }
 
     public function setConfiguration(ConfigurationInterface $configuration): void
@@ -66,16 +47,15 @@ abstract class AbstractRestApiAction
     {
         if (isset($this->options[$optionKey])) {
             return $this->options[$optionKey];
-        } else {
-            throw new \LogicException(
-                sprintf('Option "%s" is not defined', $optionKey)
-            );
         }
+        throw new \LogicException(
+            sprintf('Option "%s" is not defined', $optionKey)
+        );
     }
 
     public function execute(Request $request): Response
     {
-        throw new \Exception('WE DON\'T USE EXECUTE, WE BYPASS IT');
+        throw new \Exception("WE DON'T USE EXECUTE, WE BYPASS IT");
     }
 
     protected function findEntity(Request $request): AbstractCustomEntity
@@ -127,17 +107,13 @@ abstract class AbstractRestApiAction
         $resolver->setDefaults(['find_options' => []]);
     }
 
-    /**
-     * @param string $referenceEntityCode
-     * @return string
-     */
     protected function getEntityClass(string $referenceEntityCode): ?string
     {
         return $this->referenceEntityCodes[$referenceEntityCode] ?? null;
     }
 
     /**
-     * TODO extract these params outside the class
+     * TODO extract these params outside the class.
      */
     protected function getConfigurationAlias(string $referenceEntityCode): ?string
     {

@@ -27,10 +27,6 @@ class ActionFactory
      */
     protected $actions = [];
 
-    /**
-     * @param ContainerInterface $container
-     * @param Registry           $configurationRegistry
-     */
     public function __construct(ContainerInterface $container, Registry $configurationRegistry)
     {
         $this->container = $container;
@@ -59,9 +55,7 @@ class ActionFactory
             return null;
         }
 
-        if (!isset($this->actions[$customEntityName])) {
-            $this->actions[$customEntityName] = [];
-        }
+        $this->actions[$customEntityName] ??= [];
 
         $action = $this->container->get($configuration->getAction($actionType));
         $this->actions[$customEntityName][$actionType] = $action;

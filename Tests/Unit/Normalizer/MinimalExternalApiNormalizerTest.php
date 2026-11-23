@@ -11,9 +11,16 @@ class MinimalExternalApiNormalizerTest extends TestCase
 {
     public function testNormalizesCodeAndTranslatedLabels(): void
     {
-        $translation = new class {
-            public function getLabel(): string { return 'Chaussure'; }
-            public function getLocale(): string { return 'fr_FR'; }
+        $translation = new class () {
+            public function getLabel(): string
+            {
+                return 'Chaussure';
+            }
+
+            public function getLocale(): string
+            {
+                return 'fr_FR';
+            }
         };
         $entity = $this->getMockBuilder(AbstractTranslatableCustomEntity::class)->disableOriginalConstructor()->onlyMethods(['getCode', 'getTranslations'])->getMockForAbstractClass();
         $entity->method('getCode')->willReturn('shoe');

@@ -9,7 +9,7 @@ use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
-use Akeneo\Tool\Component\StorageUtils\Repository\IdentifiableObjectRepositoryInterface;
+use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
 use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpSpec\ObjectBehavior;
@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ReferenceDataProcessorSpec extends ObjectBehavior
 {
-    function let(
+    public function let(
         Registry $registry,
         EntityManagerInterface $em,
         ObjectUpdaterInterface $updater,
@@ -32,10 +32,10 @@ class ReferenceDataProcessorSpec extends ObjectBehavior
         ObjectDetacherInterface $detacher,
         StepExecution $stepExecution,
         JobParameters $jobParameters,
-        IdentifiableObjectRepositoryInterface $objectRepository,
+        CustomEntityRepository $objectRepository,
         ConfigurationInterface $config,
-        LocaleRepositoryInterface $localeRepository
-    ) {
+        LocaleRepositoryInterface $localeRepository,
+    ): void {
         $jobParameters->get('reference_data_name')->willReturn('my_custom_entity_name');
         $stepExecution->getJobParameters()->willReturn($jobParameters);
 
@@ -48,33 +48,33 @@ class ReferenceDataProcessorSpec extends ObjectBehavior
         $this->setStepExecution($stepExecution);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ReferenceDataProcessor::class);
     }
 
-    function it_is_a_processor()
+    public function it_is_a_processor(): void
     {
         $this->shouldImplement(ItemProcessorInterface::class);
     }
 
-    function it_is_step_execution_aware()
+    public function it_is_step_execution_aware(): void
     {
         $this->shouldImplement(StepExecutionAwareInterface::class);
     }
 
-    function it_throws_exception_when_item_has_no_code()
+    public function it_throws_exception_when_item_has_no_code(): void
     {
         $this->shouldThrow(new \RuntimeException(sprintf('Column "%s" is mandatory', 'code')))
              ->during('process', [[]]);
     }
 
-    function it_creates_an_entity_if_it_does_not_exist(
+    public function it_creates_an_entity_if_it_does_not_exist(
         $objectRepository,
         $updater,
         $validator,
-        ConstraintViolationListInterface $violations
-    ) {
+        ConstraintViolationListInterface $violations,
+    ): void {
         $item = [
             'code' => 'foo',
             'bar'  => 'baz',
@@ -88,13 +88,13 @@ class ReferenceDataProcessorSpec extends ObjectBehavior
         $this->process($item);
     }
 
-    function it_updates_an_existing_entity(
+    public function it_updates_an_existing_entity(
         $objectRepository,
         $updater,
         $validator,
         ConstraintViolationListInterface $violations,
-        ReferenceDataInterface $entity
-    ) {
+        ReferenceDataInterface $entity,
+    ): void {
         $item = [
             'code' => 'foo',
             'bar'  => 'baz',
@@ -108,12 +108,12 @@ class ReferenceDataProcessorSpec extends ObjectBehavior
         $this->process($item);
     }
 
-    function it_skips_item_on_update_exception(
+    public function it_skips_item_on_update_exception(
         $objectRepository,
         $updater,
         $stepExecution,
-        ReferenceDataInterface $entity
-    ) {
+        ReferenceDataInterface $entity,
+    ): void {
         $item = [
             'code' => 'foo',
             'bar'  => 'baz',
@@ -129,15 +129,15 @@ class ReferenceDataProcessorSpec extends ObjectBehavior
         $this->shouldThrow(InvalidItemException::class)->during('process', [$item]);
     }
 
-    function it_skips_item_on_constraint_violation(
+    public function it_skips_item_on_constraint_violation(
         $objectRepository,
         $updater,
         $detacher,
         $validator,
         $stepExecution,
         ConstraintViolationListInterface $violations,
-        ReferenceDataInterface $entity
-    ) {
+        ReferenceDataInterface $entity,
+    ): void {
         $item = [
             'code' => 'foo',
             'bar'  => 'baz',

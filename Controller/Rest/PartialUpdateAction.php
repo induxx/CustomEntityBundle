@@ -19,30 +19,19 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PartialUpdateAction extends AbstractRestApiAction implements ActionInterface
 {
-    protected ValidatorInterface $validator;
-    protected NormalizerInterface $violationNormalizer;
-    private RouterInterface $router;
-    private EntityManager $entityManager;
-    private Registry $configurationRegistry;
-
     public function __construct(
-        ActionFactory       $actionFactory,
-        ActionEventManager  $eventManager,
-        ManagerRegistry     $managerRegistry,
-        Registry            $configurationRegistry,
-        RouterInterface     $router,
-        EntityManager       $entityManager,
-        ValidatorInterface  $validator,
-        NormalizerInterface $violationNormalizer,
-        array               $referenceEntityCodes,
-        array               $referenceEntityNames,
+        ActionFactory $actionFactory,
+        ActionEventManager $eventManager,
+        ManagerRegistry $managerRegistry,
+        private readonly Registry $configurationRegistry,
+        private readonly RouterInterface $router,
+        private readonly EntityManager $entityManager,
+        protected ValidatorInterface $validator,
+        protected NormalizerInterface $violationNormalizer,
+        array $referenceEntityCodes,
+        array $referenceEntityNames,
     ) {
         parent::__construct($actionFactory, $eventManager, $managerRegistry, $referenceEntityCodes, $referenceEntityNames);
-        $this->validator = $validator;
-        $this->violationNormalizer = $violationNormalizer;
-        $this->router = $router;
-        $this->entityManager = $entityManager;
-        $this->configurationRegistry = $configurationRegistry;
     }
 
     public function __invoke(Request $request, string $referenceCode, string $code): Response
