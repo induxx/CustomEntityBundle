@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
-<phpunit
-        backupGlobals="false"
-        backupStaticAttributes="false"
-        colors="true"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
-        processIsolation="false"
-        stopOnFailure="false"
-        bootstrap="config/bootstrap.php">
-
+<phpunit bootstrap="bootstrap.php" colors="true">
     <php>
-        <server name="KERNEL_CLASS" value="Kernel" force="true" />
+        <server name="KERNEL_CLASS" value="TestKernel" force="true"/>
+        <server name="APP_ENV" value="test" force="true"/>
     </php>
-
     <testsuites>
-        <testsuite name="Custom entity bundle tests">
-            <directory suffix="Test.php">vendor/akeneo-labs/custom-entity-bundle/Tests</directory>
+        <testsuite name="integration">
+            <directory suffix="Test.php">../Integration</directory>
         </testsuite>
     </testsuites>
-
 </phpunit>

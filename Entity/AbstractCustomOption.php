@@ -14,9 +14,6 @@ abstract class AbstractCustomOption extends AbstractCustomEntity
     /** @var string */
     protected $label;
 
-    /**
-     * @return string
-     */
     public function getLabel(): string
     {
         return $this->label;
@@ -24,8 +21,6 @@ abstract class AbstractCustomOption extends AbstractCustomEntity
 
     /**
      * @param string $label
-     *
-     * @return AbstractCustomOption
      */
     public function setLabel($label): AbstractCustomOption
     {

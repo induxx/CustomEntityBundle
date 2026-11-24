@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  * Internal API normalizer.
  *
  * Used to generate JSON rest responses.
+ *
  * @see       \Pim\Bundle\CustomEntityBundle\Controller\RestController
  *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
@@ -22,7 +23,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  */
 class CustomEntityNormalizer implements NormalizerInterface
 {
-    /** @var array $supportedFormats */
+    /** @var array */
     protected $supportedFormats = ['internal_api'];
 
     /** @var NormalizerInterface */
@@ -37,17 +38,11 @@ class CustomEntityNormalizer implements NormalizerInterface
     /** @var StructureVersionProviderInterface */
     protected $structureVersionprovider;
 
-    /**
-     * @param NormalizerInterface $pimSerializer
-     * @param VersionManager $versionManager
-     * @param NormalizerInterface $versionNormalizer
-     * @param StructureVersionProviderInterface $structureVersionProvider
-     */
     public function __construct(
         NormalizerInterface $pimSerializer,
         VersionManager $versionManager,
         NormalizerInterface $versionNormalizer,
-        StructureVersionProviderInterface $structureVersionProvider
+        StructureVersionProviderInterface $structureVersionProvider,
     ) {
         $this->pimSerializer = $pimSerializer;
         $this->versionManager = $versionManager;
@@ -57,10 +52,6 @@ class CustomEntityNormalizer implements NormalizerInterface
 
     /**
      * @param AbstractCustomEntity $entity
-     * @param null                 $format
-     * @param array                $context
-     *
-     * @return array
      */
     public function normalize($entity, $format = null, array $context = []): array
     {
@@ -94,19 +85,11 @@ class CustomEntityNormalizer implements NormalizerInterface
         return $normalizedEntity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof AbstractCustomEntity && in_array($format, $this->supportedFormats);
     }
 
-    /**
-     * @param AbstractCustomEntity $entity
-     *
-     * @return array
-     */
     protected function getLabels(AbstractCustomEntity $entity): array
     {
         $labels = [];

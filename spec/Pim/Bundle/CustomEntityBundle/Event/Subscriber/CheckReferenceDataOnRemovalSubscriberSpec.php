@@ -2,6 +2,8 @@
 
 namespace spec\Pim\Bundle\CustomEntityBundle\Event\Subscriber;
 
+use Akeneo\Channel\Infrastructure\Component\Repository\LocaleRepositoryInterface;
+use Akeneo\Channel\Infrastructure\Component\Repository\ChannelRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Event\RemoveEvent;
 use Akeneo\Tool\Component\StorageUtils\StorageEvents;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,78 +33,86 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class CheckReferenceDataOnRemovalSubscriberSpec extends ObjectBehavior
 {
-    function let(
+    public function let(
         AttributeRepository $attributeRepository,
         ProductQueryBuilderFactoryInterface $pqbFactory,
         Registry $configRegistry,
-        EntityManagerInterface $em
-    ) {
-        $this->beConstructedWith($attributeRepository, $pqbFactory, $configRegistry, $em);
+        EntityManagerInterface $em,
+        LocaleRepositoryInterface $localeRepository,
+        ChannelRepositoryInterface $channelRepository,
+    ): void {
+        $localeRepository->getActivatedLocaleCodes()->willReturn([]);
+        $channelRepository->getChannelCodes()->willReturn([]);
+        $this->beConstructedWith($attributeRepository, $pqbFactory, $configRegistry, $em, $localeRepository, $channelRepository);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(CheckReferenceDataOnRemovalSubscriber::class);
     }
 
-    function it_is_an_event_subscriber()
+    public function it_is_an_event_subscriber(): void
     {
         $this->shouldHaveType(EventSubscriberInterface::class);
     }
 
-    function it_subscribes_to_pre_remove_events()
+    public function it_subscribes_to_pre_remove_events(): void
     {
         $this->getSubscribedEvents()->shouldHaveKey(StorageEvents::PRE_REMOVE);
         $this->getSubscribedEvents()->shouldHaveKey(MassActionEvents::MASS_DELETE_PRE_HANDLER);
         $this->getSubscribedEvents()->shouldHaveCount(2);
     }
 
-    function it_does_not_check_other_entities_than_reference_data(RemoveEvent $event, AbstractCustomEntity $object)
+    public function it_does_not_check_other_entities_than_reference_data(RemoveEvent $event, AbstractCustomEntity $object): void
     {
         $event->getSubject()->willReturn(Argument::not($object));
         $this->checkReferenceDataUsage($event)->shouldReturn(null);
     }
 
-    function it_checks_reference_data_usage(
+    public function it_checks_reference_data_usage(
         RemoveEvent $event,
         AbstractCustomEntity $refData,
         AttributeRepository $attributeRepository,
         AttributeInterface $attribute,
         ProductQueryBuilderFactoryInterface $pqbFactory,
         ProductQueryBuilderInterface $pqb,
-        \Countable $countable
-    ) {
+        \Countable $countable,
+    ): void {
         $event->getSubject()->willReturn($refData);
         $refData->getCode()->willReturn('green');
         $refData->getCustomEntityName()->willReturn('color');
+        $attribute->isScopable()->willReturn(false);
+        $attribute->isLocalizable()->willReturn(false);
         $attribute->getCode()->willReturn('main_color');
         $attributeRepository->getAttributesByReferenceDataName('color')->willReturn([$attribute]);
 
         $pqbFactory->create()->willReturn($pqb);
-        $pqb->addFilter('main_color', Operators::IN_LIST, ['green'])->shouldBeCalled();
+        $pqb->addFilter('main_color', Operators::IN_LIST, ['green'], [])->shouldBeCalled();
         $pqb->execute()->willReturn($countable);
         $countable->count()->willReturn(0);
 
         $this->checkReferenceDataUsage($event)->shouldReturn(null);
     }
 
-    function it_throws_an_exception_when_reference_data_is_used_in_at_least_one_product(
+    public function it_throws_an_exception_when_reference_data_is_used_in_at_least_one_product(
         RemoveEvent $event,
         AbstractCustomEntity $refData,
         AttributeRepository $attributeRepository,
         AttributeInterface $attribute,
         ProductQueryBuilderFactoryInterface $pqbFactory,
         ProductQueryBuilderInterface $pqb,
-        \Countable $countable
-    ) {
+        \Countable $countable,
+    ): void {
         $event->getSubject()->willReturn($refData);
         $refData->getCode()->willReturn('green');
         $refData->getCustomEntityName()->willReturn('color');
+        $attribute->isScopable()->willReturn(false);
+        $attribute->isLocalizable()->willReturn(false);
         $attribute->getCode()->willReturn('main_color');
         $attributeRepository->getAttributesByReferenceDataName('color')->willReturn([$attribute]);
 
         $pqbFactory->create()->willReturn($pqb);
-        $pqb->addFilter('main_color', Operators::IN_LIST, ['green'])->shouldBeCalled();
+        $pqb->addFilter('main_color', Operators::IN_LIST, ['green'], [])->shouldBeCalled();
         $pqb->execute()->willReturn($countable);
 
         $countable->count()->willReturn(1);
@@ -116,11 +126,11 @@ class CheckReferenceDataOnRemovalSubscriberSpec extends ObjectBehavior
             ->during('checkReferenceDataUsage', [$event]);
     }
 
-    function it_only_checks_for_reference_data_registry_names(
+    public function it_only_checks_for_reference_data_registry_names(
         MassActionEvent $event,
         DatagridInterface $datagrid,
-        $configRegistry
-    ) {
+        $configRegistry,
+    ): void {
         $event->getDatagrid()->willReturn($datagrid);
         $datagrid->getName()->willReturn('product');
         $configRegistry->has('product')->willReturn(false);
@@ -128,7 +138,7 @@ class CheckReferenceDataOnRemovalSubscriberSpec extends ObjectBehavior
         $this->checkReferenceDataIdsUsage($event)->shouldReturn(null);
     }
 
-    function it_checks_many_reference_data_usage(
+    public function it_checks_many_reference_data_usage(
         MassActionEvent $event,
         DatagridInterface $datagrid,
         DatasourceInterface $datasource,
@@ -140,8 +150,8 @@ class CheckReferenceDataOnRemovalSubscriberSpec extends ObjectBehavior
         ProductQueryBuilderInterface $pqb,
         \Countable $countable,
         $configRegistry,
-        $em
-    ) {
+        $em,
+    ): void {
         $configRegistry->has('color')->willReturn(true);
         $configRegistry->get('color')->willReturn($config);
         $config->getEntityClass()->willReturn('MyColorFQCN');
@@ -153,12 +163,14 @@ class CheckReferenceDataOnRemovalSubscriberSpec extends ObjectBehavior
         $datasource->getResults()->willReturn([1, 3]);
 
         $attributeRepository->getAttributesByReferenceDataName('color')->willReturn([$attribute]);
+        $attribute->isScopable()->willReturn(false);
+        $attribute->isLocalizable()->willReturn(false);
         $attribute->getCode()->willReturn('main_color');
         $em->getRepository('MyColorFQCN')->willReturn($refDataRepository);
         $refDataRepository->findReferenceDataCodesFromIds([1, 3])->willReturn(['green', 'purple']);
 
         $pqbFactory->create()->willReturn($pqb);
-        $pqb->addFilter('main_color', Operators::IN_LIST, ['green', 'purple'])->shouldBeCalled();
+        $pqb->addFilter('main_color', Operators::IN_LIST, ['green', 'purple'], [])->shouldBeCalled();
         $pqb->execute()->willReturn($countable);
 
         $countable->count()->willReturn(0);

@@ -8,15 +8,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Overridden because the data locale is not taken into account in the AjaxOptionController
+ * Overridden because the data locale is not taken into account in the AjaxOptionController.
  *
  * @author Romain Monceau <romain@akeneo.com>
  */
 class EnterpriseAjaxOptionController extends BaseAjaxOptionController
 {
-    /**
-     * {@inheritdoc}
-     */
     public function listAction(Request $request)
     {
         $query = $request->query;

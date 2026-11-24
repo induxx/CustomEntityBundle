@@ -11,7 +11,7 @@ use Acme\Bundle\CustomBundle\Entity\Color;
  */
 class MassDeleteTest extends AbstractCrudTestCase
 {
-    public function testMassDeleteReferenceData()
+    public function testMassDeleteReferenceData(): void
     {
         $color1 = $this->createColor1();
         $color2 = $this->createColor2();

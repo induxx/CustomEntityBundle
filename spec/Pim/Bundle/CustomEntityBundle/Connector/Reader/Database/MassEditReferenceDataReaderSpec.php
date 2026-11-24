@@ -15,45 +15,44 @@ use Akeneo\Pim\Structure\Component\ReferenceData\ConfigurationRegistry;
 
 class MassEditReferenceDataReaderSpec extends ObjectBehavior
 {
-    function let(EntityManager $em, ConfigurationRegistry $registry, StepExecution $stepExecution)
+    public function let(EntityManager $em, ConfigurationRegistry $registry, StepExecution $stepExecution): void
     {
         $this->beConstructedWith($em, $registry);
         $this->setStepExecution($stepExecution);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(MassEditReferenceDataReader::class);
     }
 
-    function it_is_an_item_reader()
+    public function it_is_an_item_reader(): void
     {
         $this->shouldImplement(ItemReaderInterface::class);
     }
 
-    function it_is_step_execution_aware()
+    public function it_is_step_execution_aware(): void
     {
         $this->shouldImplement(StepExecutionAwareInterface::class);
     }
 
-    function it_reads_reference_data_from_database(
+    public function it_reads_reference_data_from_database(
         $em,
         $stepExecution,
         JobExecution $jobExecution,
         JobParameters $jobParameters,
-        CustomEntityRepository $repository
-    ) {
-        $someCustomentity = function($id = null) {
-            return new class($id) {
-                private $id;
-                public function __construct($id) {
-                    $this->id = $id;
-                }
-                public function getId() {
-                    return $this->id;
-                }
-            };
-        };
+        CustomEntityRepository $repository,
+    ): void {
+        $someCustomentity = (fn ($id = null): object => new class ($id) {
+            public function __construct(private $id)
+            {
+            }
+
+            public function getId()
+            {
+                return $this->id;
+            }
+        });
 
         $jobParameters->get('reference_data')->willReturn('some_custom_entity');
         $jobParameters->get('ids')->willReturn([44, 56]);
@@ -61,17 +60,17 @@ class MassEditReferenceDataReaderSpec extends ObjectBehavior
         $stepExecution->getJobExecution()->willReturn($jobExecution);
 
         $customEntities = [$someCustomentity(44), $someCustomentity(56)];
-        $repository->findByIds([44, 56])->willReturn(new \ArrayIterator($customEntities));
+        $repository->findByIds([44, 56])->willReturn(new \Doctrine\Common\Collections\ArrayCollection($customEntities));
         $em->getRepository('some_custom_entity')->willReturn($repository);
 
         $stepExecution->incrementSummaryInfo('read')->shouldBeCalledTimes(2);
 
         $item = $this->read();
-        $item->shouldHaveType(get_class($someCustomentity()));
+        $item->shouldHaveType($someCustomentity()::class);
         $item->getId()->shouldReturn(44);
 
         $item = $this->read();
-        $item->shouldHaveType(get_class($someCustomentity()));
+        $item->shouldHaveType($someCustomentity()::class);
         $item->getId()->shouldReturn(56);
 
         $this->read()->shouldReturn(null);

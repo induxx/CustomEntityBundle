@@ -5,7 +5,7 @@ namespace Pim\Bundle\CustomEntityBundle\Entity\Repository;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Repository for translatable custom entities
+ * Repository for translatable custom entities.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -13,9 +13,6 @@ use Doctrine\ORM\QueryBuilder;
  */
 class TranslatableCustomEntityRepository extends CustomEntityRepository
 {
-    /**
-     * {@inheritdoc}
-     */
     public function createDatagridQueryBuilder()
     {
         return parent::createDatagridQueryBuilder()
@@ -28,10 +25,7 @@ class TranslatableCustomEntityRepository extends CustomEntityRepository
             ->addSelect('translation');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findBySearchQB($search, array $options)
+    protected function findBySearchQB($search, array $options)
     {
         $qb = parent::findBySearchQB($search, $options);
 
@@ -49,7 +43,7 @@ class TranslatableCustomEntityRepository extends CustomEntityRepository
 
     /**
      * If the column defined as the sorting one belongs to the entity fields, we filter by this field
-     * Otherwise, we consider that it's a translation one
+     * Otherwise, we consider that it's a translation one.
      *
      * {@inheritdoc}
      */
@@ -69,7 +63,7 @@ class TranslatableCustomEntityRepository extends CustomEntityRepository
     /**
      * Adds select in the findBySearch method
      * Used in products datagrid filtering and product edit form
-     * This method is used by findBySearch method and it's not recommended to call it from elsewhere
+     * This method is used by findBySearch method and it's not recommended to call it from elsewhere.
      *
      * {@inheritdoc}
      */
@@ -89,7 +83,7 @@ class TranslatableCustomEntityRepository extends CustomEntityRepository
                 ->addSelect(
                     sprintf(
                         'CASE WHEN translation.%s IS NULL '.
-                        'THEN CONCAT(\'[\', %s.code, \']\') ELSE translation.%s END AS text',
+                        "THEN CONCAT('[', %s.code, ']') ELSE translation.%s END AS text",
                         $labelProperty,
                         $this->getAlias(),
                         $labelProperty
@@ -101,7 +95,7 @@ class TranslatableCustomEntityRepository extends CustomEntityRepository
     /**
      * Adds search on label or code in the findBySearch method
      * Used in products datagrid filtering and product edit form
-     * This method is used by findBySearch method and it's not recommended to call it from elsewhere
+     * This method is used by findBySearch method and it's not recommended to call it from elsewhere.
      *
      * {@inheritdoc}
      */

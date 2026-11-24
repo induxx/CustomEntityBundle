@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Controller for custom entities
+ * Controller for custom entities.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -27,10 +27,6 @@ class Controller
      */
     protected $request;
 
-    /**
-     * @param ActionFactory $actionFactory
-     * @param RequestStack  $requestStack
-     */
     public function __construct(ActionFactory $actionFactory, RequestStack $requestStack)
     {
         $this->actionFactory = $actionFactory;
@@ -38,15 +34,14 @@ class Controller
     }
 
     /**
-     * Default action
+     * Default action.
      *
      * @param string $customEntityName
      * @param string $actionType
      *
-     * @return Response
      * @throws NotFoundHttpException
      */
-    public function executeAction($customEntityName, $actionType)
+    public function executeAction($customEntityName, $actionType): Response
     {
         $action = $this->actionFactory->getAction($customEntityName, $actionType);
         if (!$action) {

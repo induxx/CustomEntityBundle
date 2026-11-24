@@ -14,13 +14,13 @@ use Acme\Bundle\CustomBundle\Entity\Pictogram;
  */
 class UpdateTest extends AbstractCrudTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadData();
     }
 
-    public function testUpdateSimpleReferenceData()
+    public function testUpdateSimpleReferenceData(): void
     {
         $entityName = Color::class;
 
@@ -51,7 +51,7 @@ class UpdateTest extends AbstractCrudTestCase
         $this->assertEquals($data['blue'], $dbColor->getBlue());
     }
 
-    public function testUpdateTranslatableReferenceData()
+    public function testUpdateTranslatableReferenceData(): void
     {
         $entityName = Pictogram::class;
         $myPicto = $this->get('doctrine.orm.entity_manager')->getRepository($entityName)->findOneBy(['code' => 'my_picto']);
@@ -65,7 +65,7 @@ class UpdateTest extends AbstractCrudTestCase
             'labels' => [
                 'en_US' => 'An english label',
                 'fr_FR' => 'Un label français',
-                'de_DE' => 'Ein deutsches Label'
+                'de_DE' => 'Ein deutsches Label',
             ],
         ];
 
@@ -82,7 +82,7 @@ class UpdateTest extends AbstractCrudTestCase
         }
     }
 
-    public function testUpdateReferenceDataWithInactiveLocale()
+    public function testUpdateReferenceDataWithInactiveLocale(): void
     {
         $entityName = Pictogram::class;
         $myPicto = $this->em->getRepository($entityName)->findOneBy(['code' => 'my_picto']);
@@ -104,7 +104,7 @@ class UpdateTest extends AbstractCrudTestCase
         $this->manager->update($myPicto, $data);
     }
 
-    public function testUpdateLinkedReferenceData()
+    public function testUpdateLinkedReferenceData(): void
     {
         $entityName = Brand::class;
         $myBrand = $this->em->getRepository($entityName)->findOneBy(['code' => 'my_brand']);

@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Constraint collection provider adding the reference data list as validation constraint
+ * Constraint collection provider adding the reference data list as validation constraint.
  *
  * @author     Romain Monceau <romain@akeneo.com>
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
@@ -28,23 +28,18 @@ class ReferenceData implements ConstraintCollectionProviderInterface
     protected $supportedJobNames;
 
     /**
-     * @param ConstraintCollectionProviderInterface $simpleProvider
-     * @param Registry                              $configurationRegistry
-     * @param string[]                              $supportedJobNames
+     * @param string[] $supportedJobNames
      */
     public function __construct(
         ConstraintCollectionProviderInterface $simpleProvider,
         Registry $configurationRegistry,
-        array $supportedJobNames
+        array $supportedJobNames,
     ) {
         $this->simpleProvider        = $simpleProvider;
         $this->configurationRegistry = $configurationRegistry;
         $this->supportedJobNames     = $supportedJobNames;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConstraintCollection()
     {
         $referenceDataNames = $this->configurationRegistry->getNames();
@@ -56,17 +51,14 @@ class ReferenceData implements ConstraintCollectionProviderInterface
             new Choice(
                 [
                     'choices' => array_combine($referenceDataNames, $referenceDataNames),
-                    'message' => 'The value must be one of the configured reference datas'
+                    'message' => 'The value must be one of the configured reference datas',
                 ]
-            )
+            ),
         ];
 
         return new Collection(['fields' => $constraintFields]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(JobInterface $job)
     {
         return in_array($job->getName(), $this->supportedJobNames);

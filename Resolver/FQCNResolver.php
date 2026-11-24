@@ -18,7 +18,7 @@ class FQCNResolver extends BaseResolver
         if (null === $className) {
             try {
                 $className = $this->container->getParameter(sprintf('pim_custom_entity.entity.%s.class', $entityType));
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 $className = null;
             }
         }

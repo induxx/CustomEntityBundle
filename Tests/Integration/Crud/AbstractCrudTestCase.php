@@ -19,13 +19,11 @@ abstract class AbstractCrudTestCase extends AbstractTestCase
      * @param string $code
      * @param string $refDataName
      * @param string $type
-     *
-     * @return AttributeInterface
      */
     protected function createRefDataAttribute(
         $code,
         $refDataName,
-        $type = AttributeTypes::REFERENCE_DATA_SIMPLE_SELECT
+        $type = AttributeTypes::REFERENCE_DATA_SIMPLE_SELECT,
     ): AttributeInterface {
         $attribute = $this->get('pim_catalog.factory.attribute')->create();
 
@@ -42,8 +40,7 @@ abstract class AbstractCrudTestCase extends AbstractTestCase
 
     /**
      * @param string $identifier
-     * @param AttributeInterface[] $attributes
-     * @param array $data
+     * @param array  $data
      */
     protected function createProduct($identifier, $data): ProductInterface
     {

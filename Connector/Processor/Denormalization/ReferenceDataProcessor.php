@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\CustomEntityBundle\Connector\Processor\Denormalization;
 
+use Exception;
 use Akeneo\Tool\Component\Batch\Item\FileInvalidItem;
 use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
 use Akeneo\Tool\Component\Batch\Item\ItemProcessorInterface;
@@ -19,7 +20,7 @@ use Akeneo\Channel\Infrastructure\Component\Repository\LocaleRepositoryInterface
 
 /**
  * Generic denormalizer processor for reference data
- * Only works for basic reference data
+ * Only works for basic reference data.
  *
  * @author    Romain Monceau <romain@akeneo.com>
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
@@ -50,12 +51,6 @@ class ReferenceDataProcessor implements ItemProcessorInterface, StepExecutionAwa
 
     /**
      * ReferenceDataProcessor constructor.
-     * @param Registry $confRegistry
-     * @param EntityManagerInterface $em
-     * @param ObjectUpdaterInterface $updater
-     * @param ValidatorInterface $validator
-     * @param ObjectDetacherInterface $detacher
-     * @param LocaleRepositoryInterface $localeRepository
      */
     public function __construct(
         Registry $confRegistry,
@@ -63,7 +58,7 @@ class ReferenceDataProcessor implements ItemProcessorInterface, StepExecutionAwa
         ObjectUpdaterInterface $updater,
         ValidatorInterface $validator,
         ObjectDetacherInterface $detacher,
-        LocaleRepositoryInterface $localeRepository
+        LocaleRepositoryInterface $localeRepository,
     ) {
         $this->confRegistry = $confRegistry;
         $this->em           = $em;
@@ -73,9 +68,6 @@ class ReferenceDataProcessor implements ItemProcessorInterface, StepExecutionAwa
         $this->localeRepository = $localeRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process($item)
     {
         if (!isset($item['code'])) {
@@ -87,8 +79,8 @@ class ReferenceDataProcessor implements ItemProcessorInterface, StepExecutionAwa
         $entity = $this->findOrCreateObject($item);
         try {
             $this->updater->update($entity, $item);
-        } catch (\Exception $e) {
-            $this->skipItemWithMessage($item, $e->getMessage(), $e);
+        } catch (\Exception $exception) {
+            $this->skipItemWithMessage($item, $exception->getMessage(), $exception);
         }
 
         $violations = $this->validator->validate($entity);
@@ -100,20 +92,15 @@ class ReferenceDataProcessor implements ItemProcessorInterface, StepExecutionAwa
         return $entity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setStepExecution(StepExecution $stepExecution)
+    public function setStepExecution(StepExecution $stepExecution): void
     {
         $this->stepExecution = $stepExecution;
     }
 
     /**
-     * Finds or create reference data entity
+     * Finds or create reference data entity.
      *
-     * @param array $item
-     *
-     * @return null|object
+     * @return object|null
      */
     protected function findOrCreateObject(array $item)
     {
@@ -127,31 +114,24 @@ class ReferenceDataProcessor implements ItemProcessorInterface, StepExecutionAwa
     }
 
     /**
-     * Finds reference data entity
+     * Finds reference data entity.
      *
-     * @param array $item
-     *
-     * @return null|object
+     * @return object|null
      */
     protected function findObject(array $item)
     {
         return $this->getRepository()->findOneByIdentifier($item['code']);
     }
 
-    /**
-     * @return CustomEntityRepository
-     */
-    protected function getRepository()
+    protected function getRepository(): CustomEntityRepository
     {
         return $this->em->getRepository($this->getClassName());
     }
 
     /**
-     * Gets class name from the conf registry
-     *
-     * @return string
+     * Gets class name from the conf registry.
      */
-    protected function getClassName()
+    protected function getClassName(): string
     {
         $referenceDataName = $this->stepExecution->getJobParameters()->get('reference_data_name');
 
@@ -161,14 +141,11 @@ class ReferenceDataProcessor implements ItemProcessorInterface, StepExecutionAwa
     /**
      * Sets an item as skipped and throws an invalid item exception.
      *
-     * @param array $item
-     * @param ConstraintViolationListInterface $violations
-     *
      * @throws InvalidItemFromViolationsException
      */
     protected function skipItemWithConstraintViolations(
         array $item,
-        ConstraintViolationListInterface $violations
+        ConstraintViolationListInterface $violations,
     ) {
         if ($this->stepExecution) {
             $this->stepExecution->incrementSummaryInfo('skip');
@@ -183,15 +160,13 @@ class ReferenceDataProcessor implements ItemProcessorInterface, StepExecutionAwa
     }
 
     /**
-     * Sets an item as skipped and throws an invalid item exception
+     * Sets an item as skipped and throws an invalid item exception.
      *
-     * @param array      $item
-     * @param \Exception $previousException
-     * @param string     $message
+     * @param string $message
      *
      * @throws InvalidItemException
      */
-    protected function skipItemWithMessage(array $item, $message, \Exception $previousException = null)
+    protected function skipItemWithMessage(array $item, $message, ?\Exception $previousException = null)
     {
         if ($this->stepExecution) {
             $this->stepExecution->incrementSummaryInfo('skip');
@@ -204,17 +179,12 @@ class ReferenceDataProcessor implements ItemProcessorInterface, StepExecutionAwa
         throw new InvalidItemException($message, $invalidItem, [], 0, $previousException);
     }
 
-    /**
-     * @param $item
-     * @param $locales
-     * @return array
-     */
     private function convertTranslatableFields(array $item): array
     {
-        foreach($this->localeRepository->getActivatedLocaleCodes() as $locale) {
-            foreach($item as $key => $value) {
+        foreach ($this->localeRepository->getActivatedLocaleCodes() as $locale) {
+            foreach ($item as $key => $value) {
                 $translatableField = explode('-', $key);
-                if(in_array($locale, $translatableField)) {
+                if (in_array($locale, $translatableField)) {
                     $item[$translatableField[0]][$locale] = $value;
                     unset($item[$key]);
                 }

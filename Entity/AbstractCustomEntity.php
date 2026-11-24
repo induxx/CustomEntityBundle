@@ -17,27 +17,16 @@ abstract class AbstractCustomEntity extends AbstractReferenceData
     /** @var \DateTime */
     protected $updated;
 
-    /**
-     * @return \DateTime
-     */
     public function getCreated(): ?\DateTime
     {
         return $this->created;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getUpdated(): ?\DateTime
     {
         return $this->updated;
     }
 
-    /**
-     * @param \DateTime $created
-     *
-     * @return AbstractCustomEntity
-     */
     public function setCreated(\DateTime $created): AbstractCustomEntity
     {
         $this->created = $created;
@@ -45,11 +34,6 @@ abstract class AbstractCustomEntity extends AbstractReferenceData
         return $this;
     }
 
-    /**
-     * @param \DateTime $updated
-     *
-     * @return AbstractCustomEntity
-     */
     public function setUpdated(\DateTime $updated): AbstractCustomEntity
     {
         $this->updated = $updated;
@@ -59,27 +43,20 @@ abstract class AbstractCustomEntity extends AbstractReferenceData
 
     /**
      * Returns the custom entity name used in the configuration
-     * Used to map row actions on datagrid
-     *
-     * @return string
+     * Used to map row actions on datagrid.
      */
     public function getCustomEntityName(): string
     {
-        return strtolower(join('', array_slice(explode('\\', get_class($this)), -1)));
+        return strtolower(implode('', array_slice(explode('\\', static::class), -1)));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getLabelProperty(): string
     {
         return 'code';
     }
 
     /**
-     * Returns the sort order
-     *
-     * @return string
+     * Returns the sort order.
      */
     public static function getSortOrderColumn(): string
     {

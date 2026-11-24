@@ -5,7 +5,7 @@ namespace Pim\Bundle\CustomEntityBundle\Manager;
 use Pim\Bundle\CustomEntityBundle\Configuration\ConfigurationInterface;
 
 /**
- * Registry for managers
+ * Registry for managers.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2014 Akeneo SAS (http://www.akeneo.com)
@@ -19,18 +19,17 @@ class Registry
     protected $managers = [];
 
     /**
-     * Add a manager for a class name
+     * Add a manager for a class name.
      *
-     * @param string           $key
-     * @param ManagerInterface $manager
+     * @param string $key
      */
-    public function add($key, ManagerInterface $manager)
+    public function add($key, ManagerInterface $manager): void
     {
         $this->managers[$key] = $manager;
     }
 
     /**
-     * Returns a manager
+     * Returns a manager.
      *
      * @param string $key
      *
@@ -42,9 +41,7 @@ class Registry
     }
 
     /**
-     * Returns a manager for a configuration
-     *
-     * @param ConfigurationInterface $configuration
+     * Returns a manager for a configuration.
      *
      * @return ManagerInterface
      */

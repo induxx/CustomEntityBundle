@@ -8,7 +8,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Normalizes a translation interface in a flat array
+ * Normalizes a translation interface in a flat array.
  *
  * @author    Romain Monceau <romain@akeneo.com>
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
@@ -24,22 +24,15 @@ class TranslationNormalizer implements NormalizerInterface
     /** @var string[] */
     protected $skippedFields = [];
 
-    /**
-     * @param ClassMetadataRegistry $classMetadataRegistry
-     * @param PropertyAccessorInterface $propertyAccessor
-     */
     public function __construct(
         ClassMetadataRegistry $classMetadataRegistry,
-        PropertyAccessorInterface $propertyAccessor
+        PropertyAccessorInterface $propertyAccessor,
     ) {
         $this->classMetadataRegistry = $classMetadataRegistry;
         $this->propertyAccessor = $propertyAccessor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize($translation, $format = null, array $context = array())
+    public function normalize($translation, $format = null, array $context = [])
     {
         $normalizedData = [];
         $transProperties = $this->classMetadataRegistry->getReadableProperties($translation);
@@ -71,10 +64,7 @@ class TranslationNormalizer implements NormalizerInterface
         return false;
     }
 
-    /**
-     * @param array $skippedFields
-     */
-    public function setSkippedFields(array $skippedFields)
+    public function setSkippedFields(array $skippedFields): void
     {
         $this->skippedFields = $skippedFields;
     }

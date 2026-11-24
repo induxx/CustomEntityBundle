@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Pim\Bundle\CustomEntityBundle\Entity;
 
 use Akeneo\Tool\Component\Localization\Model\TranslatableInterface;
@@ -22,17 +24,17 @@ class TranslatableCustomOption extends AbstractTranslatableCustomEntity
 
 class TranslatableCustomOptionSpec extends ObjectBehavior
 {
-    function let()
+    public function let(): void
     {
         $this->beAnInstanceOf(TranslatableCustomOption::class);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(AbstractCustomEntity::class);
     }
 
-    function it_is_translatable()
+    public function it_is_translatable(): void
     {
         $this->shouldImplement(TranslatableInterface::class);
     }

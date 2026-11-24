@@ -22,20 +22,20 @@ class UpdaterSpec extends ObjectBehavior
         PropertyAccessorInterface $propertyAccessor,
         LocaleRepositoryInterface $localeRepository,
         EntityManagerInterface $em,
-        FileStorerInterface $storer
-    ) {
+        FileStorerInterface $storer,
+    ): void {
         $this->beConstructedWith($propertyAccessor, $localeRepository, $em, $storer, '/tmp');
     }
 
-    public function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(Updater::class);
         $this->shouldImplement(ObjectUpdaterInterface::class);
     }
 
     public function it_updates_code(
-        ReferenceDataInterface $referenceData
-    ) {
+        ReferenceDataInterface $referenceData,
+    ): void {
         $referenceData->setCode('foo')->shouldBeCalled();
         $this->update($referenceData, ['code' => 'foo']);
     }
@@ -47,8 +47,8 @@ class UpdaterSpec extends ObjectBehavior
         ClassMetadata $classMetadata,
         EntityRepository $associationRepository,
         \stdClass $associatedEntity,
-        \stdClass $otherEntity
-    ) {
+        \stdClass $otherEntity,
+    ): void {
         $em->getClassMetadata(Argument::any())->willReturn($classMetadata);
         $classMetadata->getAssociationMappings()->willReturn([
             'foo' => [
@@ -74,13 +74,13 @@ class UpdaterSpec extends ObjectBehavior
         ]);
     }
 
-    function it_can_remove_an_association(
+    public function it_can_remove_an_association(
         $propertyAccessor,
         $em,
         ReferenceDataInterface $referenceData,
         EntityRepository $repository,
-        ClassMetadata $classMetadata
-    ) {
+        ClassMetadata $classMetadata,
+    ): void {
         $em->getClassMetadata(Argument::any())->willReturn($classMetadata);
         $em->getRepository(Argument::any())->willReturn($repository);
         $repository->findOneBy(Argument::any())->shouldNotBeCalled();
@@ -112,7 +112,7 @@ class UpdaterSpec extends ObjectBehavior
         );
     }
 
-    function it_updates_translations_and_associated_entities_at_the_same_time(
+    public function it_updates_translations_and_associated_entities_at_the_same_time(
         $propertyAccessor,
         $em,
         $localeRepository,
@@ -121,8 +121,8 @@ class UpdaterSpec extends ObjectBehavior
         LabelTranslation $translationFr,
         ClassMetadata $classMetadata,
         EntityRepository $associationRepository,
-        \stdClass $associatedEntity
-    ) {
+        \stdClass $associatedEntity,
+    ): void {
         $data = [
             'foo'    => 'related_entity_code',
             'labels' => [

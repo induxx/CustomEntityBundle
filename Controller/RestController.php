@@ -21,11 +21,9 @@ class RestController
     }
 
     /**
-     * Return the list of registred references data
-     *
-     * @return JsonResponse
+     * Return the list of registred references data.
      */
-    public function listAction()
+    public function listAction(): JsonResponse
     {
         $referenceDataNames = $this->configurations->getNames();
 

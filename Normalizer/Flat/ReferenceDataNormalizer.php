@@ -13,7 +13,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Normalizes a reference data in flat format
+ * Normalizes a reference data in flat format.
  *
  * @author    Romain Monceau <romain@akeneo.com>
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
@@ -32,39 +32,25 @@ class ReferenceDataNormalizer implements NormalizerInterface
     /** @var NormalizerInterface */
     protected $transNormalizer;
 
-    /** @var LocaleRepositoryInterface|null */
-    private $localeRepository;
-
     /** @var string[] */
     protected $skippedFields = [];
 
     /** @var string[] */
-    private $translationSkippedFields = ['id', 'locale', 'foreignKey'];
+    private array $translationSkippedFields = ['id', 'locale', 'foreignKey'];
 
-    /**
-     * @param TargetEntityResolver $targetEntityResolver
-     * @param ClassMetadataRegistry $classMetadataRegistry
-     * @param PropertyAccessorInterface $propertyAccessor
-     * @param NormalizerInterface $transNormalizer
-     * @param LocaleRepositoryInterface|null $localeRepository
-     */
     public function __construct(
         TargetEntityResolver $targetEntityResolver,
         ClassMetadataRegistry $classMetadataRegistry,
         PropertyAccessorInterface $propertyAccessor,
         NormalizerInterface $transNormalizer,
-        LocaleRepositoryInterface $localeRepository = null
+        private readonly ?LocaleRepositoryInterface $localeRepository = null,
     ) {
         $this->targetEntityResolver = $targetEntityResolver;
         $this->classMetadataRegistry = $classMetadataRegistry;
         $this->propertyAccessor = $propertyAccessor;
         $this->transNormalizer = $transNormalizer;
-        $this->localeRepository = $localeRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function normalize($object, $format = null, array $context = []): array
     {
         $csvData = [];
@@ -101,16 +87,14 @@ class ReferenceDataNormalizer implements NormalizerInterface
     }
 
     /**
-     * Normalizes linked object property
+     * Normalizes linked object property.
      *
      * @param object $object
      * @param string $property
      * @param string $format
-     * @param array $context
-     *
-     * @return array|null
+     * @param array  $context
      */
-    protected function normalizeLinkedObject($object, $property, $propertyValue, $format, $context)
+    protected function normalizeLinkedObject($object, $property, $propertyValue, $format, $context): ?array
     {
         $targetEntityClass = $this->targetEntityResolver->getTargetEntityClass($object, $property);
         $targetReflectionClass = $this->classMetadataRegistry->getReflectionClass($targetEntityClass);
@@ -124,7 +108,9 @@ class ReferenceDataNormalizer implements NormalizerInterface
                 }
 
                 return [$property => implode(',', $normalizedData)];
-            } elseif ($targetReflectionClass->implementsInterface(TranslationInterface::class)) {
+            }
+            // Linked reference data
+            if ($targetReflectionClass->implementsInterface(TranslationInterface::class)) {
                 $normalizedData = [];
                 foreach ($propertyValue as $translation) {
                     $translationData = $this->transNormalizer->normalize($translation, $format);
@@ -194,10 +180,7 @@ class ReferenceDataNormalizer implements NormalizerInterface
         return false;
     }
 
-    /**
-     * @param array $skippedFields
-     */
-    public function setSkippedFields(array $skippedFields)
+    public function setSkippedFields(array $skippedFields): void
     {
         $this->skippedFields = $skippedFields;
     }

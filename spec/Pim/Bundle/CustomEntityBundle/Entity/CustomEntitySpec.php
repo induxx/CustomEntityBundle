@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Pim\Bundle\CustomEntityBundle\Entity;
 
 use PhpSpec\ObjectBehavior;
@@ -15,13 +17,13 @@ class CustomEntity extends AbstractCustomEntity
 
 class CustomEntitySpec extends ObjectBehavior
 {
-    function let()
+    public function let(): void
     {
         $this->beAnInstanceOf('spec\Pim\Bundle\CustomEntityBundle\Entity\CustomEntity');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
-        $this->shouldHaveType('Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomEntity');
+        $this->shouldHaveType(AbstractCustomEntity::class);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Connector\Processor\Normalization;
 
 use Akeneo\Tool\Component\Batch\Item\ItemProcessorInterface;
@@ -7,7 +9,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * Generic normalizer processor for reference datas
- * Only works for basic reference data
+ * Only works for basic reference data.
  *
  * @author    Romain Monceau <romain@akeneo.com>
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
@@ -18,17 +20,11 @@ class ReferenceDataProcessor implements ItemProcessorInterface
     /** @var NormalizerInterface */
     protected $normalizer;
 
-    /**
-     * @param NormalizerInterface $normalizer
-     */
     public function __construct(NormalizerInterface $normalizer)
     {
         $this->normalizer = $normalizer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process($item)
     {
         return $this->normalizer->normalize($item, 'csv');

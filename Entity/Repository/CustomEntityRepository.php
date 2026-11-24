@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Repository for the custom entity
+ * Repository for the custom entity.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 class CustomEntityRepository extends ReferenceDataRepository implements PageableRepositoryInterface
 {
     /**
-     * Create a query builder used for the datagrid
+     * Create a query builder used for the datagrid.
      *
      * @return QueryBuilder
      */
@@ -27,13 +27,13 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
     }
 
     /**
-     * Applies mass action parameters on the query builder
+     * Applies mass action parameters on the query builder.
      *
      * @param QueryBuilder $qb
      * @param bool         $inset
      * @param array        $values
      */
-    public function applyMassActionParameters($qb, $inset, $values)
+    public function applyMassActionParameters($qb, $inset, $values): void
     {
         if (!empty($values)) {
             $valueWhereCondition =
@@ -56,9 +56,7 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
 
         $qb->setParameters(
             $qb->getParameters()->filter(
-                function ($parameter) {
-                    return $parameter->getName() !== 'entityIds';
-                }
+                fn ($parameter): bool => 'entityIds' !== $parameter->getName()
             )
         );
 
@@ -72,16 +70,17 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
     }
 
     /**
-     * Used to mass delete reference datas from their ids
+     * Used to mass delete reference datas from their ids.
      *
      * @param int[] $ids
      *
      * @return int
+     *
      * @throws \LogicException
      */
     public function deleteFromIds(array $ids)
     {
-        if (empty($ids)) {
+        if ([] === $ids) {
             throw new \LogicException('Nothing to remove');
         }
 
@@ -99,17 +98,13 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
     }
 
     /**
-     * Hydrates reference data from ids for quick export or mass edit features
-     *
-     * @param array $referenceDataIds
-     *
-     * @return ArrayCollection
+     * Hydrates reference data from ids for quick export or mass edit features.
      *
      * @throws \InvalidArgumentException array of ids should not be empty
      */
-    public function findByIds(array $referenceDataIds)
+    public function findByIds(array $referenceDataIds): ArrayCollection
     {
-        if (empty($referenceDataIds)) {
+        if ([] === $referenceDataIds) {
             throw new \InvalidArgumentException('Array must contain at least one reference data id');
         }
 
@@ -124,9 +119,6 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
         return new ArrayCollection($qb->getQuery()->getResult());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findBySearch($search = null, array $options = [])
     {
         $qb = $this->findBySearchQB($search, $options);
@@ -136,7 +128,6 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
 
     /**
      * @param string $search
-     * @param array  $options
      *
      * @return QueryBuilder
      */
@@ -152,25 +143,22 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
         }
 
         if (isset($options['limit'])) {
-            $qb->setMaxResults((int)$options['limit']);
+            $qb->setMaxResults((int) $options['limit']);
             if (isset($options['page'])) {
-                $qb->setFirstResult((int)$options['limit'] * ((int)$options['page'] - 1));
+                $qb->setFirstResult((int) $options['limit'] * ((int) $options['page'] - 1));
             }
         }
 
         return $qb;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function searchAfterOffset(array $criteria, array $orders, $limit, $offset)
     {
         $qb = $this->createQueryBuilder($this->getAlias());
 
         foreach ($criteria as $field => $criterion) {
             $qb->andWhere(
-                $qb->expr()->eq(sprintf('%s.%s', $field), $this->getAlias(), $qb->expr()->literal($criterion))
+                $qb->expr()->eq(sprintf('%s.%s', $field), $this->getAlias())
             );
         }
 
@@ -187,9 +175,6 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
             ->execute();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function count(array $criteria = [])
     {
         try {
@@ -197,25 +182,20 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
 
             foreach ($criteria as $field => $criterion) {
                 $qb->andWhere(
-                    $qb->expr()->eq(sprintf('%s.%s', $field), $this->getAlias(), $qb->expr()->literal($criterion))
+                    $qb->expr()->eq(sprintf('%s.%s', $field), $this->getAlias())
                 );
             }
 
-            return (int)$qb
+            return (int) $qb
                 ->select(sprintf('COUNT(%s.id)', $this->getAlias()))
                 ->getQuery()
                 ->getSingleScalarResult();
-        } catch (UnexpectedResultException $e) {
+        } catch (UnexpectedResultException) {
             return 0;
         }
     }
 
-    /**
-     * @param array $referenceDataIds
-     *
-     * @return array
-     */
-    public function findReferenceDataCodesFromIds(array $referenceDataIds)
+    public function findReferenceDataCodesFromIds(array $referenceDataIds): array
     {
         $qb = $this->createQueryBuilder('rd');
         $qb
@@ -223,18 +203,13 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
             ->andWhere($qb->expr()->in('rd', ':ids'))
             ->setParameter('ids', $referenceDataIds);
 
-        return array_map(function ($result) {
-            return $result['code'];
-        }, $qb->getQuery()->getArrayResult());
+        return array_map(fn (array $result) => $result['code'], $qb->getQuery()->getArrayResult());
     }
 
     /**
      * Adds select in the findBySearch method
      * Used in products datagrid filtering and product edit form
-     * This method is used by findBySearch method and it's not recommended to call it from elsewhere
-     *
-     * @param QueryBuilder $qb
-     * @param array        $options
+     * This method is used by findBySearch method and it's not recommended to call it from elsewhere.
      */
     protected function selectFields(QueryBuilder $qb, array $options)
     {
@@ -247,7 +222,7 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
             )
             ->addSelect(
                 sprintf(
-                    'CASE WHEN %s.%s IS NULL OR %s.%s = \'\' THEN CONCAT(\'[\', %s.code, \']\') ELSE %s.%s END AS text',
+                    "CASE WHEN %s.%s IS NULL OR %s.%s = '' THEN CONCAT('[', %s.code, ']') ELSE %s.%s END AS text",
                     $this->getAlias(),
                     $labelProperty,
                     $this->getAlias(),
@@ -262,10 +237,9 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
     /**
      * Adds search on label or code in the findBySearch method
      * Used in products datagrid filtering and product edit form
-     * This method is used by findBySearch method and it's not recommended to call it from elsewhere
+     * This method is used by findBySearch method and it's not recommended to call it from elsewhere.
      *
-     * @param QueryBuilder $qb
-     * @param string       $search
+     * @param string $search
      */
     protected function addSearchFilter(QueryBuilder $qb, $search)
     {
@@ -275,11 +249,12 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
         if ('code' !== $labelProperty) {
             $searchDql .= sprintf(' OR %s.%s LIKE :search', $this->getAlias(), $labelProperty);
         }
+
         $qb->andWhere($searchDql)->setParameter('search', "%$search%");
     }
 
     /**
-     * Duplicate code due to method visibility
+     * Duplicate code due to method visibility.
      *
      * {@inheritdoc}
      */
@@ -293,9 +268,7 @@ class CustomEntityRepository extends ReferenceDataRepository implements Pageable
     /**
      * Adds sort order in the findBySearch method
      * Used in products datagrid filtering and product edit form
-     * This method is used by findBySearch method and it's not recommended to call it from elsewhere
-     *
-     * @param QueryBuilder $qb
+     * This method is used by findBySearch method and it's not recommended to call it from elsewhere.
      */
     protected function addSortOrder(QueryBuilder $qb)
     {

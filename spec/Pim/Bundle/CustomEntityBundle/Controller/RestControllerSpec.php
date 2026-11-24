@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Pim\Bundle\CustomEntityBundle\Controller;
 
 use PhpSpec\ObjectBehavior;
@@ -8,12 +10,12 @@ use Pim\Bundle\CustomEntityBundle\Controller\RestController;
 
 class RestControllerSpec extends ObjectBehavior
 {
-    public function let(ConfigurationRegistry $configurations)
+    public function let(ConfigurationRegistry $configurations): void
     {
         $this->beConstructedWith($configurations);
     }
 
-    public function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(RestController::class);
     }

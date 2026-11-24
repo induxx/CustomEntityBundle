@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Versioning;
 
 use Akeneo\Tool\Bundle\VersioningBundle\UpdateGuesser\UpdateGuesserInterface;
 use Doctrine\ORM\EntityManager;
 
 /**
- * Custom entity update guesser
+ * Custom entity update guesser.
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -14,20 +16,11 @@ use Doctrine\ORM\EntityManager;
  */
 class UpdateGuesser implements UpdateGuesserInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function supportAction($action)
     {
-        return in_array(
-            $action,
-            [UpdateGuesserInterface::ACTION_UPDATE_ENTITY]
-        );
+        return UpdateGuesserInterface::ACTION_UPDATE_ENTITY == $action;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function guessUpdates(EntityManager $em, $entity, $action)
     {
         $pendings = [];

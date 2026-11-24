@@ -17,14 +17,14 @@ class ControllerSpec extends ObjectBehavior
         RequestStack $requestStack,
         ActionFactory $actionFactory,
         ActionInterface $action,
-        Request $request
-    ) {
+        Request $request,
+    ): void {
         $requestStack->getCurrentRequest()->willReturn($request);
         $this->beConstructedWith($actionFactory, $requestStack);
         $actionFactory->getAction('entity', 'action')->willReturn($action);
     }
 
-    public function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(Controller::class);
     }
@@ -32,20 +32,20 @@ class ControllerSpec extends ObjectBehavior
     public function it_calls_actions(
         Request $request,
         ActionInterface $action,
-        Response $response
-    ) {
+        Response $response,
+    ): void {
         $action->execute($request)->willReturn($response);
         $this->executeAction('entity', 'action')->shouldReturn($response);
     }
 
-    public function it_throws_404_when_there_is_no_configuration_for_entity(ActionFactory $actionFactory)
+    public function it_throws_404_when_there_is_no_configuration_for_entity(ActionFactory $actionFactory): void
     {
         $actionFactory->getAction('other_entity', 'action')->willReturn(false);
         $this->shouldThrow(NotFoundHttpException::class)
             ->duringExecuteAction('other_entity', 'action');
     }
 
-    public function it_throws_404_when_there_is_no_configuration_for_action(ActionFactory $actionFactory)
+    public function it_throws_404_when_there_is_no_configuration_for_action(ActionFactory $actionFactory): void
     {
         $actionFactory->getAction('entity', 'other_action')->willReturn(false);
         $this->shouldThrow(NotFoundHttpException::class)

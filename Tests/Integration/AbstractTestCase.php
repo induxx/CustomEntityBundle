@@ -39,7 +39,7 @@ abstract class AbstractTestCase extends TestCase
 
     /**
      * @param string $refDataName Reference Data FQCN
-     * @param array $data
+     * @param array  $data
      *
      * @return object
      */

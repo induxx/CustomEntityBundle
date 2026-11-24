@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Action\Rest;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,9 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class GetAction extends AbstractRestAction
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function doExecute(Request $request): JsonResponse
     {
         $entity = $this->findEntity($request);
@@ -23,9 +22,6 @@ class GetAction extends AbstractRestAction
         return new JsonResponse($normalized);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'rest_get';

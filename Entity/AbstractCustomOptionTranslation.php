@@ -12,15 +12,13 @@ use Akeneo\Tool\Component\Localization\Model\TranslationInterface;
  *
  * @deprecated will be removed in 1.7, please use \Akeneo\Tool\Component\Localization\Model\AbstractTranslation
  */
-class AbstractCustomOptionTranslation extends AbstractTranslation implements TranslationInterface
+class AbstractCustomOptionTranslation extends AbstractTranslation implements TranslationInterface, \Stringable
 {
-    /** @var string $label */
+    /** @var string */
     protected $label;
 
     /**
      * @param string $label
-     *
-     * @return AbstractCustomOptionTranslation
      */
     public function setLabel($label): AbstractCustomOptionTranslation
     {
@@ -29,19 +27,13 @@ class AbstractCustomOptionTranslation extends AbstractTranslation implements Tra
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLabel(): string
     {
         return $this->label;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
-        return (string)$this->label;
+        return (string) $this->label;
     }
 }

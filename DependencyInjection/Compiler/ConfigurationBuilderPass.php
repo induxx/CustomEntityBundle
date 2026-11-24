@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Yaml\Parser;
 
 /**
- * Builds configuration services
+ * Builds configuration services.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -21,10 +21,7 @@ use Symfony\Component\Yaml\Parser;
  */
 class ConfigurationBuilderPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $configurations = [];
         $bundles = $container->getParameter('kernel.bundles');
@@ -49,11 +46,9 @@ class ConfigurationBuilderPass implements CompilerPassInterface
     }
 
     /**
-     * Adds a configuration service to the DIC
+     * Adds a configuration service to the DIC.
      *
-     * @param ContainerBuilder $container
-     * @param string           $name
-     * @param array            $configuration
+     * @param string $name
      */
     protected function addService(ContainerBuilder $container, $name, array $configuration)
     {
@@ -63,7 +58,7 @@ class ConfigurationBuilderPass implements CompilerPassInterface
                 new Reference('event_dispatcher'),
                 $name,
                 $configuration['entity_class'],
-                $configuration['options']
+                $configuration['options'],
             ]
         );
         $definition->setPublic(true);
@@ -71,10 +66,12 @@ class ConfigurationBuilderPass implements CompilerPassInterface
             if (null === $options || !$options['enabled']) {
                 continue;
             }
+
             $service = $options['service'];
             unset($options['service'], $options['enabled']);
             $definition->addMethodCall('addAction', [$type, $service, $options]);
         }
+
         $serviceName = sprintf('pim_custom_entity.configuration.%s', $name);
         $container->addDefinitions([$serviceName => $definition]);
         $container->getDefinition('pim_custom_entity.configuration.registry')
@@ -83,17 +80,12 @@ class ConfigurationBuilderPass implements CompilerPassInterface
     }
 
     /**
-     * Gets a configuration merged with its parents
-     *
-     * @param array $configuration
-     * @param array $configurations
-     *
-     * @return array
+     * Gets a configuration merged with its parents.
      */
-    protected function getMergedConfiguration(array $configuration, array $configurations)
+    protected function getMergedConfiguration(array $configuration, array $configurations): array
     {
         foreach (array_keys($configuration['actions']) as $actionType) {
-            $configuration['actions'][$actionType] = $configuration['actions'][$actionType] + ['enabled' => true];
+            $configuration['actions'][$actionType] += ['enabled' => true];
         }
 
         if (!$configuration['extends']) {
@@ -107,10 +99,11 @@ class ConfigurationBuilderPass implements CompilerPassInterface
         if (!$configuration['class']) {
             $configuration['class'] = $parentConfiguration['class'];
         }
-        $configuration['options'] = $configuration['options'] + $parentConfiguration['options'];
+
+        $configuration['options'] += $parentConfiguration['options'];
         foreach ($parentConfiguration['actions'] as $actionName => $actionConfiguration) {
             if (isset($configuration['actions'][$actionName])) {
-                $configuration['actions'][$actionName] = $configuration['actions'][$actionName] + $actionConfiguration;
+                $configuration['actions'][$actionName] += $actionConfiguration;
             } elseif (!array_key_exists($actionName, $configuration['actions'])) {
                 $configuration['actions'][$actionName] = $actionConfiguration;
             }
@@ -120,14 +113,11 @@ class ConfigurationBuilderPass implements CompilerPassInterface
     }
 
     /**
-     * Parses a config file and returns an array
+     * Parses a config file and returns an array.
      *
-     * @param NodeInterface $configTree
-     * @param string        $file
-     *
-     * @return array
+     * @param string $file
      */
-    protected function parseConfigFile(NodeInterface $configTree, $file)
+    protected function parseConfigFile(NodeInterface $configTree, $file): array
     {
         $yamlParser = new Parser();
         $config = $yamlParser->parse(file_get_contents($file));
@@ -137,7 +127,7 @@ class ConfigurationBuilderPass implements CompilerPassInterface
     }
 
     /**
-     * Returns the configuration definition
+     * Returns the configuration definition.
      *
      * @return NodeInterface
      */

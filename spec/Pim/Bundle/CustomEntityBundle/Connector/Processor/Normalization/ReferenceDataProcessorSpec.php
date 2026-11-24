@@ -4,27 +4,25 @@ namespace spec\Pim\Bundle\CustomEntityBundle\Connector\Processor\Normalization;
 
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CustomEntityBundle\Connector\Processor\Normalization\ReferenceDataProcessor;
-use Prophecy\Argument;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ReferenceDataProcessorSpec extends ObjectBehavior
 {
-    function let(
-        NormalizerInterface $normalizer
-    ) {
+    public function let(
+        NormalizerInterface $normalizer,
+    ): void {
         $this->beConstructedWith($normalizer);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ReferenceDataProcessor::class);
     }
 
-    function it_processes_an_item(
+    public function it_processes_an_item(
         $normalizer,
-        \stdClass $item
-    ) {
+        \stdClass $item,
+    ): void {
         $normalizer->normalize($item, 'csv')->shouldBeCalled();
         $this->process($item);
     }

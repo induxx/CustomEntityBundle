@@ -8,17 +8,17 @@ use Akeneo\Tool\Component\Connector\ArrayConverter\ArrayConverterInterface;
 
 class ReferenceDataSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ReferenceData::class);
     }
 
-    function it_is_an_array_converter()
+    public function it_is_an_array_converter(): void
     {
         $this->shouldImplement(ArrayConverterInterface::class);
     }
 
-    function it_does_not_update_non_label_fields()
+    public function it_does_not_update_non_label_fields(): void
     {
         $item = [
             'code' => 'my_code',
@@ -34,7 +34,7 @@ class ReferenceDataSpec extends ObjectBehavior
         $this->convert($item, [])->shouldReturn($item);
     }
 
-    function it_converts_label_translations()
+    public function it_converts_label_translations(): void
     {
         $item = [
             'code' => 'my_code',

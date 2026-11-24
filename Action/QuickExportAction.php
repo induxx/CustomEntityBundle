@@ -46,17 +46,7 @@ class QuickExportAction extends AbstractAction
     protected $gridFilterAdapter;
 
     /**
-     * @param ActionFactory              $actionFactory
-     * @param ActionEventManager         $eventManager
-     * @param ManagerRegistry            $managerRegistry
-     * @param RouterInterface            $router
-     * @param TranslatorInterface        $translator
-     * @param MassActionDispatcher       $massActionDispatcher
-     * @param JobInstanceRepository      $jobInstanceRepo
-     * @param JobLauncherInterface       $jobLauncher
-     * @param TokenStorageInterface      $tokenStorage
-     * @param MassActionParametersParser $parameterParser
-     * @param GridFilterAdapterInterface $gridFilterAdapter
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         ActionFactory $actionFactory,
@@ -69,7 +59,7 @@ class QuickExportAction extends AbstractAction
         JobLauncherInterface $jobLauncher,
         TokenStorageInterface $tokenStorage,
         MassActionParametersParser $parameterParser,
-        GridFilterAdapterInterface $gridFilterAdapter
+        GridFilterAdapterInterface $gridFilterAdapter,
     ) {
         parent::__construct($actionFactory, $eventManager, $managerRegistry, $router, $translator);
 
@@ -81,10 +71,7 @@ class QuickExportAction extends AbstractAction
         $this->gridFilterAdapter = $gridFilterAdapter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function doExecute(Request $request)
+    public function doExecute(Request $request): Response
     {
         $jobInstance = $this->jobInstanceRepo->findOneBy(['code' => $this->getOption('job_profile')]);
         if (null === $jobInstance || !$jobInstance instanceof JobInstance) {
@@ -109,7 +96,7 @@ class QuickExportAction extends AbstractAction
     }
 
     /**
-     * Get the authenticated user from the Security Context
+     * Get the authenticated user from the Security Context.
      *
      * @return UserInterface
      *
@@ -117,7 +104,7 @@ class QuickExportAction extends AbstractAction
      *
      * @see \Symfony\Component\Security\Core\Authentication\Token\TokenInterface::getUser()
      */
-    protected function getUser()
+    protected function getUser(): object
     {
         $token = $this->tokenStorage->getToken();
         if (null === $token || !is_object($user = $token->getUser())) {
@@ -127,9 +114,6 @@ class QuickExportAction extends AbstractAction
         return $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefined(['limit']);
@@ -142,9 +126,6 @@ class QuickExportAction extends AbstractAction
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'quick_export';

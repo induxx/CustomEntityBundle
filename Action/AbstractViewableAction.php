@@ -23,47 +23,34 @@ abstract class AbstractViewableAction extends AbstractAction
      */
     protected $twig;
 
-    /**
-     * @param ActionFactory       $actionFactory
-     * @param ActionEventManager  $eventManager
-     * @param ManagerRegistry     $managerRegistry
-     * @param RouterInterface     $router
-     * @param TranslatorInterface $translator
-     * @param Environment     $twig
-     */
     public function __construct(
         ActionFactory $actionFactory,
         ActionEventManager $eventManager,
         ManagerRegistry $managerRegistry,
         RouterInterface $router,
         TranslatorInterface $translator,
-        Environment $twig
+        Environment $twig,
     ) {
         parent::__construct($actionFactory, $eventManager, $managerRegistry, $router, $translator);
 
         $this->twig = $twig;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function doExecute(Request $request)
     {
         return $this->renderResponse(
             [
-                'object' => $this->findEntity($request)
+                'object' => $this->findEntity($request),
             ]
         );
     }
 
     /**
-     * @param array $templateVars
-     *
      * @return Response
      */
     public function renderResponse(array $templateVars = [])
     {
-        list($template, $templateVars) = $this->eventManager->dispatchPreRenderEvent(
+        [$template, $templateVars] = $this->eventManager->dispatchPreRenderEvent(
             $this,
             $this->options['template'],
             $templateVars + $this->getDefaultTemplateVars()
@@ -73,7 +60,7 @@ abstract class AbstractViewableAction extends AbstractAction
     }
 
     /**
-     * Returns the default template vars
+     * Returns the default template vars.
      *
      * @return array
      */
@@ -81,7 +68,7 @@ abstract class AbstractViewableAction extends AbstractAction
     {
         $vars = [
             'customEntityName' => $this->configuration->getName(),
-            'baseTemplate'     => $this->options['base_template']
+            'baseTemplate'     => $this->options['base_template'],
         ];
 
         if ($this->configuration->hasAction('index')) {
@@ -91,9 +78,6 @@ abstract class AbstractViewableAction extends AbstractAction
         return $vars;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setDefaultOptions(OptionsResolver $resolver)
     {
         parent::setDefaultOptions($resolver);

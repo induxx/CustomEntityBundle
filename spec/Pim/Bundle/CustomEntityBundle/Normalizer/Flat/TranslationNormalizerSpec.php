@@ -3,8 +3,6 @@
 namespace spec\Pim\Bundle\CustomEntityBundle\Normalizer\Flat;
 
 use Acme\Bundle\CustomBundle\Entity\PictogramTranslation;
-use Akeneo\Tool\Component\Localization\Model\TranslationInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CustomEntityBundle\Metadata\ClassMetadataRegistry;
 use Pim\Bundle\CustomEntityBundle\Normalizer\Flat\TranslationNormalizer;
@@ -14,36 +12,36 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class TranslationNormalizerSpec extends ObjectBehavior
 {
-    function let(ClassMetadataRegistry $classMetadataRegistry, PropertyAccessorInterface $propertyAccessor)
+    public function let(ClassMetadataRegistry $classMetadataRegistry, PropertyAccessorInterface $propertyAccessor): void
     {
         $this->beConstructedWith($classMetadataRegistry, $propertyAccessor);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(TranslationNormalizer::class);
     }
 
-    function it_is_a_normalizer()
+    public function it_is_a_normalizer(): void
     {
         $this->shouldImplement(NormalizerInterface::class);
     }
 
-    function it_does_not_support_normalization_from_serializer()
+    public function it_does_not_support_normalization_from_serializer(): void
     {
         $this->supportsNormalization(Argument::any(), Argument::any())->shouldReturn(false);
     }
 
-    function it_sets_skipped_fields()
+    public function it_sets_skipped_fields(): void
     {
         $this->setSkippedFields(['id'])->shouldReturn(null);
     }
 
-    function it_does_not_normalize_skipped_fields(
+    public function it_does_not_normalize_skipped_fields(
         PictogramTranslation $translation,
         $classMetadataRegistry,
-        $propertyAccessor
-    ) {
+        $propertyAccessor,
+    ): void {
         $translation->getLocale()->willReturn('en_US');
 
         $classMetadataRegistry
@@ -59,11 +57,11 @@ class TranslationNormalizerSpec extends ObjectBehavior
         $this->normalize($translation, 'csv');
     }
 
-    function it_normalizes_translation(
+    public function it_normalizes_translation(
         PictogramTranslation $translation,
         $classMetadataRegistry,
-        $propertyAccessor
-    ) {
+        $propertyAccessor,
+    ): void {
         $translation->getLocale()->willReturn('en_US');
 
         $classMetadataRegistry
@@ -77,11 +75,11 @@ class TranslationNormalizerSpec extends ObjectBehavior
         $this->normalize($translation, 'csv')->shouldReturn(['label-en_US' => 'foo']);
     }
 
-    function it_normalizes_many_translation_fields(
+    public function it_normalizes_many_translation_fields(
         PictogramTranslation $translation,
         $classMetadataRegistry,
-        $propertyAccessor
-    ) {
+        $propertyAccessor,
+    ): void {
         $translation->getLocale()->willReturn('en_US');
 
         $classMetadataRegistry

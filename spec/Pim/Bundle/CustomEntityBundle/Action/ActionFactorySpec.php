@@ -2,6 +2,7 @@
 
 namespace spec\Pim\Bundle\CustomEntityBundle\Action;
 
+use Pim\Bundle\CustomEntityBundle\Action\ActionFactory;
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CustomEntityBundle\Action\ActionInterface;
 use Pim\Bundle\CustomEntityBundle\Configuration\ConfigurationInterface;
@@ -12,14 +13,14 @@ class ActionFactorySpec extends ObjectBehavior
 {
     public function let(
         ContainerInterface $container,
-        Registry $confRegistry
-    ) {
+        Registry $confRegistry,
+    ): void {
         $this->beConstructedWith($container, $confRegistry);
     }
 
-    public function it_is_initializable()
+    public function it_is_initializable(): void
     {
-        $this->shouldHaveType('Pim\Bundle\CustomEntityBundle\Action\ActionFactory');
+        $this->shouldHaveType(ActionFactory::class);
     }
 
     public function it_returns_actions(
@@ -29,8 +30,8 @@ class ActionFactorySpec extends ObjectBehavior
         ConfigurationInterface $configuration2,
         ActionInterface $action1,
         ActionInterface $action2,
-        ActionInterface $action1_1
-    ) {
+        ActionInterface $action1_1,
+    ): void {
         $confRegistry->has('entity1')->willReturn(true);
         $confRegistry->get('entity1')->willReturn($configuration1);
         $confRegistry->has('entity2')->willReturn(true);

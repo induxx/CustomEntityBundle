@@ -6,7 +6,7 @@ use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
 
 /**
- * Default values provider for the quick export csv
+ * Default values provider for the quick export csv.
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
@@ -14,25 +14,18 @@ use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface
  */
 class QuickCsvExport implements DefaultValuesProviderInterface
 {
-    /** @var DefaultValuesProviderInterface $simpleProvider */
+    /** @var DefaultValuesProviderInterface */
     protected $simpleProvider;
 
     /** @var array */
     protected $supportedJobNames;
 
-    /**
-     * @param DefaultValuesProviderInterface $simpleProvider
-     * @param array                          $supportedJobNames
-     */
     public function __construct(DefaultValuesProviderInterface $simpleProvider, array $supportedJobNames)
     {
         $this->simpleProvider = $simpleProvider;
         $this->supportedJobNames = $supportedJobNames;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultValues()
     {
         $defaultValues = $this->simpleProvider->getDefaultValues();
@@ -42,9 +35,6 @@ class QuickCsvExport implements DefaultValuesProviderInterface
         return $defaultValues;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(JobInterface $job)
     {
         return in_array($job->getName(), $this->supportedJobNames);

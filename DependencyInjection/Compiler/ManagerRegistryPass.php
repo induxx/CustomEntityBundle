@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Builds configuration services
+ * Builds configuration services.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
@@ -18,17 +18,14 @@ class ManagerRegistryPass implements CompilerPassInterface
     /**
      * @staticvar string
      */
-    const REGISTRY_SERVICE = 'pim_custom_entity.manager.registry';
+    public const REGISTRY_SERVICE = 'pim_custom_entity.manager.registry';
 
     /**
      * @staticvar string
      */
-    const TAG_NAME = 'pim_custom_entity.manager';
+    public const TAG_NAME = 'pim_custom_entity.manager';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $definition = $container->getDefinition(static::REGISTRY_SERVICE);
         foreach ($container->findTaggedServiceIds(static::TAG_NAME) as $serviceId => $tags) {

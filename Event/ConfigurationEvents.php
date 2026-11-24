@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pim\Bundle\CustomEntityBundle\Event;
 
 /**
- * Contains the name of all configuration events
+ * Contains the name of all configuration events.
  *
  * @author    Antoine Guigan <antoine@akeneo.com>
  * @copyright 2014 Akeneo SAS (http://www.akeneo.com)
@@ -14,5 +16,5 @@ class ConfigurationEvents
     /**
      * @staticvar string Launched at action configuration
      */
-    const CONFIGURE = 'pim_custom_entity.configuration.configure';
+    public const CONFIGURE = 'pim_custom_entity.configuration.configure';
 }

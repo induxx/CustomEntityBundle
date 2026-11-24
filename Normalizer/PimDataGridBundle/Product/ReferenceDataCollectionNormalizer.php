@@ -24,15 +24,12 @@ class ReferenceDataCollectionNormalizer implements NormalizerInterface, Cacheabl
 
     public function __construct(
         IdentifiableObjectRepositoryInterface $attributeRepository,
-        ReferenceDataRepositoryResolverInterface $repositoryResolver
+        ReferenceDataRepositoryResolverInterface $repositoryResolver,
     ) {
         $this->attributeRepository = $attributeRepository;
         $this->repositoryResolver = $repositoryResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function normalize($referenceDataCollectionValue, $format = null, array $context = [])
     {
         $attribute = $this->attributeRepository->findOneByIdentifier($referenceDataCollectionValue->getAttributeCode());
@@ -61,10 +58,6 @@ class ReferenceDataCollectionNormalizer implements NormalizerInterface, Cacheabl
         ];
     }
 
-    /**
-     *
-     * {@inheritdoc}
-     */
     public function supportsNormalization($data, $format = null): bool
     {
         return 'datagrid' === $format && $data instanceof ReferenceDataCollectionValueInterface;
@@ -78,16 +71,14 @@ class ReferenceDataCollectionNormalizer implements NormalizerInterface, Cacheabl
     /**
      * Get the reference data label (or the [code] is no label is present).
      *
-     * @param ReferenceDataInterface $referenceData
-     *
      * @return string
      */
     protected function getLabel(ReferenceDataInterface $referenceData)
     {
         if (null !== $labelProperty = $referenceData::getLabelProperty()) {
-            $getter = 'get' . ucfirst($labelProperty);
+            $getter = 'get'.ucfirst($labelProperty);
 
-            if (method_exists($referenceData,$getter)) {
+            if (method_exists($referenceData, $getter)) {
                 $label = $referenceData->$getter();
                 if (!empty($label)) {
                     return $label;
@@ -98,7 +89,7 @@ class ReferenceDataCollectionNormalizer implements NormalizerInterface, Cacheabl
 
             if (isset($context['data_locale'])) {
                 $translation = $referenceData->getTranslation($context['data_locale']);
-                if ($translation !== null) {
+                if (null !== $translation) {
                     $label = $translation->$getter();
                     if (!empty($label)) {
                         return $label;
